@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Create Permission",
+        "module": "Permission",
+        "description": "Allows creating a new permission"
+    },
+    {
+        "name": "Read Permission",
+        "module": "Permission",
+        "description": "Allows viewing permissions"
+    },
+    {
+        "name": "Update Permission",
+        "module": "Permission",
+        "description": "Allows updating existing permissions"
+    },
+    {
+        "name": "Delete Permission",
+        "module": "Permission",
+        "description": "Allows deleting permissions"
+    }
+]
