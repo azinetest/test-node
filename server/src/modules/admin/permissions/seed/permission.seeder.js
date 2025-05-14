@@ -1,11 +1,11 @@
-const express = require("express");
-const Permission = require("../models/permission.model");
+const path = require("path");
 const fs = require("fs");
+const Permission = require("../models/permission.model");
 
-const seedData = async () => {
+const PermissionSeederData = async () => {
   try {
     const permissionData = fs.readFileSync(
-      "seed/json_data/permission.json",
+      path.join(__dirname, "permission.json"),
       "utf8"
     );
     const parsedData = JSON.parse(permissionData);
@@ -22,4 +22,4 @@ const seedData = async () => {
   }
 };
 
-module.exports = { seedData };
+module.exports = PermissionSeederData;

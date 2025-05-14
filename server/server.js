@@ -4,8 +4,10 @@ const routes = require("./src/modules/index");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
-
-connectDB().then(() => {});
+const seedData = require("./src/modules/seeder");
+connectDB().then(async () => {
+  await seedData();
+});
 
 // Ensure this line is included
 app.use(express.json());
@@ -17,7 +19,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use('/api', routes);
+app.use("/api", routes);
 
 // Run the server
 app.listen(process.env.APP_PORT, () => {

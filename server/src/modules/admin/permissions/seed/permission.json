@@ -1,22 +1,26 @@
 [
-    {
-        "name": "Create Permission",
-        "module": "Permission",
-        "description": "Allows creating a new permission"
-    },
-    {
-        "name": "Read Permission",
-        "module": "Permission",
-        "description": "Allows viewing permissions"
-    },
-    {
-        "name": "Update Permission",
-        "module": "Permission",
-        "description": "Allows updating existing permissions"
-    },
-    {
-        "name": "Delete Permission",
-        "module": "Permission",
-        "description": "Allows deleting permissions"
-    }
+  {
+    "name": "Create Permission",
+    "slug": "create-permission",
+    "module": "Permission",
+    "description": "Allows creating a new permission"
+  },
+  {
+    "name": "Read Permission",
+    "slug": "read-permission",
+    "module": "Permission",
+    "description": "Allows viewing permissions"
+  },
+  {
+    "name": "Update Permission",
+    "slug": "update-permission",
+    "module": "Permission",
+    "description": "Allows updating existing permissions"
+  },
+  {
+    "name": "Delete Permission",
+    "slug": "delete-permission",
+    "module": "Permission",
+    "description": "Allows deleting permissions"
+  }
 ]

@@ -1,22 +1,23 @@
 const PermissionService = require("../services/permission.service");
-const slug = require('slug');
+const slugify = require("slugify");
 const { StatusCodes } = require("http-status-codes");
 
 class PermissionController {
-
   // Method to create a new permission
   async create(req, res) {
     try {
       const { name, module, description } = req.body;
       const permissionData = {
         name,
-        slug: slug(name),
+        slug: slugify(name, { lower: true }),
         module,
         description,
         created_by: req.user?.id || null,
         updated_by: null,
       };
-      const newPermission = await PermissionService.createPermission(permissionData);
+      const newPermission = await PermissionService.createPermission(
+        permissionData
+      );
       return res.status(StatusCodes.CREATED).json({
         message: "Permission created successfully.",
         data: newPermission,
@@ -80,15 +81,20 @@ class PermissionController {
   // Method to update a permission
   async update(req, res) {
     try {
-      const { id, name, module, description } = req.body;
+      const { id } = req.params;
+      const { name, module, description } = req.body;
       const permissionData = {
         name,
-        slug: slug(name),
+        slug: slugify(name, { lower: true }),
         module,
         description,
         updated_by: req.user?.id || null,
       };
-      const updatedPermission = await PermissionService.updatePermission(id, permissionData);
+      
+      const updatedPermission = await PermissionService.updatePermission(
+        id,
+        permissionData
+      );
       if (!updatedPermission) {
         return res.status(StatusCodes.NOT_FOUND).json({
           message: "Permission not found.",
