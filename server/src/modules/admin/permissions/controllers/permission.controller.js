@@ -1,5 +1,5 @@
-const PermissionService = require("../services/permission.service");
 const slugify = require("slugify");
+const PermissionService = require("../services/permission.service");
 const { StatusCodes } = require("http-status-codes");
 
 class PermissionController {

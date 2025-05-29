@@ -7,11 +7,12 @@ module.exports = (schema) => {
       error.details.forEach((err) => {
         const key = err.path[0];
         if (!errors[key]) {
-          errors[key] = err.message.replace(/["]/g, '');
+          errors[key] = err.message.replace(/["]/g, "");
         }
       });
 
       return res.status(400).json({
+        status: false,
         message: "Validation failed.",
         errors,
       });

@@ -41,10 +41,9 @@ const PermissionService = {
         permissionData,
         { new: true, runValidators: true }
       );
-      
     } catch (error) {
-      console.error("Error fetching all permission: ", error);
-      throw new Error("Error fetching all permission: " + error.message);
+      console.error("Error update permission: ", error);
+      throw new Error("Error update permission: " + error.message);
     }
   },
 
@@ -66,8 +65,8 @@ const PermissionService = {
         data: null,
       };
     } catch (error) {
-      console.error("Error fetching all permission: ", error);
-      throw new Error("Error fetching all permission: " + error.message);
+      console.error("Error delete permission: ", error);
+      throw new Error("Error delete permission: " + error.message);
     }
   },
 };

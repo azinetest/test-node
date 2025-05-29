@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = express();
 const seedData = require("./src/modules/seeder");
 connectDB().then(async () => {
-  await seedData();
+  await seedData(); // this is seeder automatically run and you can run seeder using a commond also
 });
 
 // Ensure this line is included
