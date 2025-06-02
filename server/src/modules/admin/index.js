@@ -1,5 +1,5 @@
 const express = require("express");
-const PermissionRoutes = require("./permissions/routes/permission.routes");
+const PermissionRoutes = require("./permissions-management/routes/permission.routes");
 const ServicesRoutes = require("./service-management/routes/service.routes");
 
 const router = express.Router();

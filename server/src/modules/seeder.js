@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PermissionSeederData = require("./admin/permissions/seed/permission.seeder");
+const PermissionSeederData = require("./admin/permissions-management/seed/permission.seeder");
 const ServicesSeederData = require("./admin/service-management/seed/service.seeder");
 const connectDB = require("../config/db.config");
 require('dotenv').config();
