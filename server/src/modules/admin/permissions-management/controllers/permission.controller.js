@@ -1,9 +1,9 @@
 const slugify = require("slugify");
 const PermissionService = require("../services/permission.service");
 const { StatusCodes } = require("http-status-codes");
+const sendResponse = require("../../../../utils/response"); // update path as needed
 
 class PermissionController {
-  // Method to create a new permission
   async create(req, res) {
     try {
       const { name, module, description } = req.body;
@@ -15,70 +15,82 @@ class PermissionController {
         created_by: req.user?.id || null,
         updated_by: null,
       };
+
       const newPermission = await PermissionService.createPermission(
         permissionData
       );
-      return res.status(StatusCodes.CREATED).json({
+
+      return sendResponse(res, {
+        statusCode: StatusCodes.CREATED,
         message: "Permission created successfully.",
         data: newPermission,
       });
     } catch (error) {
       console.error("Error in create permission controller:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
         message: "An error occurred while creating the permission.",
         error: error.message,
       });
     }
   }
 
-  // Method to fetch all permissions
   async getPermissions(req, res) {
     try {
       const permissions = await PermissionService.getAllPermissions();
+
       if (!permissions || permissions.length === 0) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
           message: "Permissions not found.",
-          data: [],
+          data: null,
         });
       }
-      return res.status(StatusCodes.OK).json({
+
+      return sendResponse(res, {
         message: "Permissions fetched successfully.",
         data: permissions,
       });
     } catch (error) {
       console.error("Error in fetching permissions:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
         message: "An error occurred while fetching permissions.",
         error: error.message,
       });
     }
   }
 
-  // Method to get a permission by ID
   async getPermissionById(req, res) {
     try {
-      const { id } = req.params; // Use req.params for route parameters
+      const { id } = req.params;
       const permission = await PermissionService.getPermissionById(id);
+
       if (!permission) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
           message: "Permission not found.",
           data: null,
         });
       }
-      return res.status(StatusCodes.OK).json({
+
+      return sendResponse(res, {
         message: "Permission fetched successfully.",
         data: permission,
       });
     } catch (error) {
       console.error("Error in fetching permission by ID:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
         message: "An error occurred while fetching the permission by ID.",
         error: error.message,
       });
     }
   }
 
-  // Method to update a permission
   async update(req, res) {
     try {
       const { id } = req.params;
@@ -90,23 +102,28 @@ class PermissionController {
         description,
         updated_by: req.user?.id || null,
       };
-      
+
       const updatedPermission = await PermissionService.updatePermission(
         id,
         permissionData
       );
+
       if (!updatedPermission) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
           message: "Permission not found.",
         });
       }
-      return res.status(StatusCodes.OK).json({
+
+      return sendResponse(res, {
         message: "Permission updated successfully.",
         data: updatedPermission,
       });
     } catch (error) {
       console.error("Error in updating permission:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
         message: "An error occurred while updating the permission.",
         error: error.message,
       });

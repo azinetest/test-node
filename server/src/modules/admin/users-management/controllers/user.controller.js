@@ -1,0 +1,175 @@
+const { StatusCodes } = require("http-status-codes");
+const UserService = require("../services/user.service"); // Adjust path if needed
+const sendResponse = require("../../../../utils/response"); // Adjust path if needed
+
+class UserController {
+  // Create a new user
+  async create(req, res) {
+    try {
+      const {
+        first_name,
+        last_name,
+        email,
+        phone,
+        password,
+        status,
+        role_id,
+        profile_pic,
+        company_profile,
+        subscribe_services,
+        expired_at,
+        extra_user_limit,
+      } = req.body;
+
+      const userData = {
+        first_name,
+        last_name,
+        email,
+        phone,
+        password,
+        status,
+        role_id,
+        profile_pic,
+        company_profile,
+        subscribe_services,
+        expired_at,
+        extra_user_limit,
+        created_by: req.user?.id || null,
+        updated_by: null,
+      };
+
+      const newUser = await UserService.createUser(userData);
+
+      return sendResponse(res, {
+        statusCode: StatusCodes.CREATED,
+        message: "User created successfully.",
+        data: newUser,
+      });
+    } catch (error) {
+      console.error("Error in create user controller:", error);
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
+        message: "An error occurred while creating the user.",
+        error: error.message,
+      });
+    }
+  }
+
+  // Get all users
+  async getUsers(req, res) {
+    try {
+      const users = await UserService.getAllUsers();
+      if (!users || users.length === 0) {
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
+          message: "Users not found.",
+          data: null,
+        });
+      }
+      return sendResponse(res, {
+        message: "Users fetched successfully.",
+        data: users,
+      });
+    } catch (error) {
+      console.error("Error in fetching users:", error);
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
+        message: "An error occurred while fetching users.",
+        error: error.message,
+      });
+    }
+  }
+
+  // Get user by ID
+  async getUserById(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await UserService.getUserById(id);
+
+      if (!user) {
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
+          message: "User not found.",
+          data: null,
+        });
+      }
+
+      return sendResponse(res, {
+        message: "User fetched successfully.",
+        data: user,
+      });
+    } catch (error) {
+      console.error("Error in fetching user by ID:", error);
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
+        message: "An error occurred while fetching the user by ID.",
+        error: error.message,
+      });
+    }
+  }
+
+  // Update a user
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const {
+        first_name,
+        last_name,
+        email,
+        phone,
+        password,
+        status,
+        role_id,
+        profile_pic,
+        company_profile,
+        subscribe_services,
+        expired_at,
+        extra_user_limit,
+      } = req.body;
+
+      const userData = {
+        first_name,
+        last_name,
+        email,
+        phone,
+        password,
+        status,
+        role_id,
+        profile_pic,
+        company_profile,
+        subscribe_services,
+        expired_at,
+        extra_user_limit,
+        updated_by: req.user?.id || null,
+      };
+
+      const updatedUser = await UserService.updateUser(id, userData);
+
+      if (!updatedUser) {
+        return sendResponse(res, {
+          statusCode: StatusCodes.NOT_FOUND,
+          message: "User not found.",
+          data: null,
+        });
+      }
+
+      return sendResponse(res, {
+        message: "User updated successfully.",
+        data: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error in updating user:", error);
+      return sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: false,
+        message: "An error occurred while updating the user.",
+        error: error.message,
+      });
+    }
+  }
+}
+
+module.exports = new UserController();

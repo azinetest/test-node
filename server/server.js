@@ -5,6 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const seedData = require("./src/modules/seeder");
+
 connectDB().then(async () => {
   await seedData(); // this is seeder automatically run and you can run seeder using a commond also
 });
