@@ -4,7 +4,7 @@ const authRoutes = require("./auth/routes/auth.routes");
 const authMiddleware = require("./auth/middlewares/auth.middleware");
 
 const router = express.Router();
-router.use("/admin", authMiddleware.Verify, adminRoutes);
+router.use("/admin",  adminRoutes);
 router.use("/", authRoutes);
 
 module.exports = router;
