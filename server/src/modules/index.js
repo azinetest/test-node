@@ -2,7 +2,7 @@ const express = require("express");
 const adminRoutes = require("./admin/index");
 const authRoutes = require("./auth/routes/auth.routes");
 const authMiddleware = require("./auth/middlewares/auth.middleware");
-const servicesRoutes = require("./services/routes/services.routes");
+const servicesRoutes = require("./services/index");
 
 const router = express.Router();
 router.use("/admin", authMiddleware.Verify, adminRoutes);
