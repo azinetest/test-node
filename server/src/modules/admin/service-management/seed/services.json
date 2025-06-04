@@ -4,6 +4,12 @@
     "slug": "kyc",
     "prefix": "Idm",
     "status": 1,
+    "tokens": {
+      "production": {
+        "url": "https://gw.idmerit.com/us-15/2.1?",
+        "token": "41cbe589-4d72-3653-b36b-9a52ac88ef61"
+      }
+    },
     "mastersheet": [
       {
         "country_name": "Afghanistan",
@@ -27102,19 +27108,49 @@
     "name": "Verify",
     "slug": "verify",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://kyc-dev.idmerit.com/v2.9/verify?",
+        "token": "FsLJycLgkaBNjY6hqvY6QuvhYEOe57WF1e0iAx4r9yCpC2YYDo8ohl82kBkQLpI8ZaBcTeEf1kLWgBtkaipYJ4JUGBLg24UvKXiXOAyvLDYNfMXH1y4PPJBvdI1FGiTAhAaUU87Rh4aDwfTIlh6JUyJ4JVmLVqk70R2bnWBZsXM9R0pXisEamCwlZ3oh8VorO396Jw1yLCFpvlVNLV9pzu5OLbMmXW7XsfAlLfOi0BCSl2j468g4fkwlMnN"
+      },
+      "production": {
+        "url": "https://kyc.idmerit.com/v2.9/verify?",
+        "token": "beHT3bbX9zlxxF8jJNWJh8SjP9W3lVP7ffSpAfwqLm3PgEZE3fNMI5jKlwi1IvYSIU6xzZtrq6n82w16lj4uznM2nn5cbcwd0WjNt2jyxPHYzc7wgzdOWGrwDVjH1tmL0QxarRuWB0rUK1mEEnxBN2VbLEU4vLWAxuUatAvaR9TO2bL1rnKCP4fddrbqdT6tfS8mJHbIZ73cFfSmVCqyXqLCXAiZhyTnbcjGVMH9BmbQ4I1xDjwxVLABVwf"
+      }
+    }
   },
   {
     "name": "Aml",
     "slug": "aml",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://amldev2.idmerit.com/v1.4/",
+        "token": "5k9FV22r7at8WUcMxPU01K6Je98eZPjLhhcjLWsKZNU1Y4Dhefc5kZUkmtXRfMvypcZxhPonSxlIHW269QjIuKWVbfH0i34aNkQvVY246MADmmDZbgGoTTY1DCtVnT6cvXVCddTAnImZps0fNhVk6N24KpaIzG4rOtG0IIJRzdjin6AjC6qnk3tr5lDYcBMcg7Ki6gFrBVHfQEGLb8VJIZwnGmdmqgC1eLQgG7c1wvDfI4i3BzYN0Y0Okin"
+      },
+      "production": {
+        "url": "https://aml2.idmerit.com/v1.4/",
+        "token": "fmVh9cWdes34MNgMHQFyrNrE8IM1SZyMh6F9bTwKpvj9HxqcGbmbJC7dCpNqwo1DBRI8hobDHwieeZwcyfLX4KXz9nLMGNKwXWCkdTSODfpXAMrEaQk2vJcOx0NnXRa0sVkajV5ECC8XCJVKQYGJwJ9R2wxPGYCqW1H0UsSq6S9YY79aNLBfrIDH9hloz3bbMeu2luFaRQPqB6rsjg0tZkiE1rGl0lV5kfUInI5PCP7i9I7lE1qPtbJZhiF"
+      }
+    }
   },
   {
     "name": "Kyb",
     "slug": "kyb",
     "prefix": "Idm",
     "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://kybdev.idmerit.com/v1.4/",
+        "token": "wO6OVBqYo9Ij43jcGKNrCjEDilS2BVynyUgVdD4dAhyIO6fGKAyH54ztIVCAKfkW7wOjMeszrUojUrLVlesTkEJp2hLpiQBjBGZ5T6qSPxsxnyCTQi6OnBPn2UjJCPqVmu6Ww4CNUvtyoOpa4chLPEJutSZRgcYwaBZotgzkvniPr6ocCyzNQXFwvlDoCTE7ZmYXDcKUqsQ5wzfgahi75SA3XRkFCiTUK6mdDgClI1e0IN1dkjKdi4Qgw1I"
+      },
+      "production": {
+        "url": "https://kyb.idmerit.com/v1.4/",
+        "token": "hervb8YSL0iCMTmltbQFKWQNoHKGsY5tPY1gR6DkWGARUC2k7vcY6QnZZSH3eueWXHBSERLokACVoZsns68zeX5kJHaEYyCwG3SxSbxnzjG2lL1nLleml3ZMF9XrJHWEQ3lSCTsRRzj14arGWmYSaX2JCeKjDxICjeL6XzvhWVvTxha62auqtX0Ct67LRi35dHSVNeGEYd1zEbiy3QFO6XigSLVXkeGd5LWFA0VFcps9fZkqPUONpSI6IVo"
+      }
+    },
     "mastersheet": [
       {
         "country_name": "Albania",
@@ -28522,25 +28558,61 @@
     "name": "Social",
     "slug": "social",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://idsocial-dev.idmerit.com/v2.1/service",
+        "token": "Mo9W0aRCLDO0T0DAYHSTGnyibeIKAKeXiR8I4pdYkIpqyQcRFV9AOklxhsBoMxr0S2NVhkknAd75Gij0gTCb3SmuNE1tohh5IxpIa6pCaKSEgynWLTdB9jnjXx416g0moWApp4f0w26IihcFbXyTXqjDeRFW9RfpZZKIClAm04zRHjCCu60ZJIocEgMen5ZdQMx4izFXlpopEBZlzS3bPO1nhsyOtgsOw566eoIJDhsb5KXNqnpWIkdcH8G"
+      },
+      "production": {
+        "url": "https://idsocial.idmerit.com/v2.1/service",
+        "token": "PWry0FhE1P8dSG8uRArw8BAV89OrqWWSdO5xcNsS7UU0C7hlmypwUxA29D9GgSAPWKbTYYYBji0r2bpM0QGP5lFLD1oQMXxQ98IEsKDWHR4aqMOVaKDDi6ZeYVfdfFQWy1P9pIQAqTD9bLLcUnXjJiMuodTDZ6KFERVa8ssrS92OqGu6pwDOCubjScj4lQEsXmoBnTcwOV12Q9NXp92LB2Ir45wFUycXiShOAx8IsUlAs0qTPsD4AP2CF78"
+      }
+    }
   },
   {
     "name": "Trust",
     "slug": "trust",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://itrust-dev.idmerit.com/v2.1/service",
+        "token": "xJvHgxcXHFMEHAsBFVSs678Vjloc4tupIDR7gY8jkZ2zLx3RToe48vSwN5gQ3JLqmi7JjrvZwUlWUuQh19x8TzRbZEZFChJlM3S083cupxHQscQAZEgubMVi6TNNHEPGEJZzQCdBR1UVj4eY66nHshP1yH5e3YYkTS2WgUXOLhWjGKZ9G3h6PsQgEnvhwAAAFPnEqrDtM9Bp3xbuJ7Z54Xpz8U1KX8RkkRnXXcHL2t1anb4VFDfaPXfk5PF"
+      }
+    }
   },
   {
     "name": "Scan",
     "slug": "scan",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://sandbox.idmvalidate.com/",
+        "token": "Basic N2IzZGE5ZWZjNWEyNDZlZTgzYWQ1ZWQxOTY3YTJiMDE6MzYzNDRjMDczNzBjNDE2Y2E0MjIyMzhmNmY5ZTE1MWQ="
+      },
+      "production": {
+        "url": "https://prod.idmvalidate.com/",
+        "token": "Basic MTZiZjlkNjZmNzZmNGU4NjliMGY4MDE0NTdmNTQ4MGY6NjlmM2JiZjI4ZjljNDc5YmIyMzFhZGY2YTJjODM5YjQ="
+      }
+    }
   },
   {
     "name": "Live",
     "slug": "live",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://sandbox.idmvalidate.com/",
+        "token": "Basic NGJmMDAyNDZhZjdmNGUwMmE0ZjA1M2JhMDFmNmQ0NmE6NGUwZGVjMjY1MDY3NDdiYzhjNGE2YWU0ZGQyNTY5NmU="
+      },
+      "production": {
+        "url": "https://prod.idmvalidate.com/",
+        "token": "Basic MTZiZjlkNjZmNzZmNGU4NjliMGY4MDE0NTdmNTQ4MGY6NjlmM2JiZjI4ZjljNDc5YmIyMzFhZGY2YTJjODM5YjQ="
+      }
+    }
   },
   {
     "name": "Device",
@@ -28558,6 +28630,12 @@
     "name": "Prefill",
     "slug": "prefill",
     "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "tokens": {
+      "sandbox": {
+        "url": "https://prefill-dev.idmerit.com/v1.0/",
+        "token": "d70350a3-40aa-47bc-9878-6e21b4154925"
+      }
+    }
   }
 ]

@@ -1,7 +1,10 @@
-// middlewares/validate.js
+const { StatusCodes } = require("http-status-codes");
+const sendResponse = require("../utils/response");
+
 module.exports = (schema) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.body, { abortEarly: false });
+
     if (error) {
       const errors = {};
       error.details.forEach((err) => {
@@ -11,9 +14,10 @@ module.exports = (schema) => {
         }
       });
 
-      return res.status(400).json({
-        status: false,
+      return sendResponse(res, {
+        statusCode: StatusCodes.UNPROCESSABLE_ENTITY, // 422
         message: "Validation failed.",
+        data: null,
         errors,
       });
     }
