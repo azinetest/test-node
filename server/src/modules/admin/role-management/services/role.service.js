@@ -15,9 +15,9 @@ const RoleService = {
     }
   },
 
-  async getAllRoles() {
+  async getAllRoles(query) {
     try {
-      return await RoleModel.find()
+      return await RoleModel.find(query)
         .populate("permissions", "id name slug")
         .populate("created_by")
         .populate("updated_by");
@@ -27,9 +27,9 @@ const RoleService = {
     }
   },
 
-  async getRoleById(roleId) {
+  async getRoleById(query, roleId) {
     try {
-      return await RoleModel.findById(roleId)
+      return await RoleModel.findOne({ _id: roleId, ...query })
         .populate("permissions", "id name slug")
         .populate("created_by")
         .populate("updated_by");

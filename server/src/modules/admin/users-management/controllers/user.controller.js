@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const UserService = require("../services/user.service"); // Adjust path if needed
 const sendResponse = require("../../../../utils/response"); // Adjust path if needed
-
+const getAccessControlQuery = require("../../../../utils/accessControl");
 class UserController {
   // Create a new user
   async create(req, res) {
@@ -34,7 +34,8 @@ class UserController {
         subscribe_services,
         expired_at,
         extra_user_limit,
-        created_by: req.user?.id || null,
+        parent_id: user_id || req.user?._id || null,
+        created_by: req.user?._id || null,
         updated_by: null,
       };
 
@@ -59,7 +60,8 @@ class UserController {
   // Get all users
   async getUsers(req, res) {
     try {
-      const users = await UserService.getAllUsers();
+      const query = getAccessControlQuery(req.user, {});
+      const users = await UserService.getAllUsers(query);
       if (!users || users.length === 0) {
         return sendResponse(res, {
           statusCode: StatusCodes.NOT_FOUND,
@@ -86,7 +88,8 @@ class UserController {
   async getUserById(req, res) {
     try {
       const { id } = req.params;
-      const user = await UserService.getUserById(id);
+      const query = getAccessControlQuery(req.user, {});
+      const user = await UserService.getUserById(query, id);
 
       if (!user) {
         return sendResponse(res, {
@@ -143,7 +146,7 @@ class UserController {
         subscribe_services,
         expired_at,
         extra_user_limit,
-        updated_by: req.user?.id || null,
+        updated_by: req.user?._id || null,
       };
 
       const updatedUser = await UserService.updateUser(id, userData);

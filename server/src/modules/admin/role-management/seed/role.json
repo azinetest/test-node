@@ -3,5 +3,10 @@
     "name": "Super Admin",
     "slug": "super-admin",
     "description": "Allows access to all features and settings."
+  },
+  {
+    "name": "Guest",
+    "slug": "guest",
+    "description": "Can only log in but has no access to any features."
   }
 ]

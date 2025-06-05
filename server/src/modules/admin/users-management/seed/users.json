@@ -4,7 +4,7 @@
     "last_name": "Admin",
     "email": "super.a@azine.in",
     "phone": "7896541230",
-    "password": "SuperAdmin@123",
+    "password": "12345678",
     "status": 1,
     "parent_id": null,
     "profile_pic": "",
@@ -15,5 +15,39 @@
     },
     "expired_at": "2050-12-31",
     "username": "superAdmin"
+  },
+  {
+    "first_name": "Guest",
+    "last_name": "UserOne",
+    "email": "guest1@example.com",
+    "phone": "1234567890",
+    "password": "12345678",
+    "status": 1,
+    "parent_id": null,
+    "profile_pic": "",
+    "company_profile": {
+      "name": "Guest Company One",
+      "email": "guest1@company.com",
+      "phone": "1234567890"
+    },
+    "expired_at": "2050-12-31",
+    "username": "guestUser1"
+  },
+  {
+    "first_name": "Guest",
+    "last_name": "UserTwo",
+    "email": "guest2@example.com",
+    "phone": "0987654321",
+    "password": "12345678",
+    "status": 1,
+    "parent_id": null,
+    "profile_pic": "",
+    "company_profile": {
+      "name": "Guest Company Two",
+      "email": "guest2@company.com",
+      "phone": "0987654321"
+    },
+    "expired_at": "2050-12-31",
+    "username": "guestUser2"
   }
 ]

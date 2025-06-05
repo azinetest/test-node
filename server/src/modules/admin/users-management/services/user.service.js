@@ -15,19 +15,19 @@ const UserService = {
     }
   },
 
-  async getAllUsers() {
+  async getAllUsers(query) {
     try {
       // Fetch all user from the database
-      return await UserModel.find().select('-password -tokens -created_by -updated_by');
+      return await UserModel.find(query).select('-password -tokens -created_by -updated_by');
     } catch (error) {
       console.error("Error fetching all user: ", error);
       throw new Error("Error fetching all user: " + error.message);
     }
   },
 
-  async getUserById(userId) {
+  async getUserById(query,userId) {
     try {
-      return await UserModel.findById(userId).select('-password -tokens -created_by -updated_by');
+      return await UserModel.findOne({ _id: userId, ...query }).select('-password -tokens -created_by -updated_by');
     } catch (error) {
       console.error("Error fetching user by ID: ", error);
       throw new Error("Error fetching user by ID: " + error.message);
