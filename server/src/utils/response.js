@@ -11,6 +11,7 @@ const sendResponse = (
   }
 ) => {
   const response = {
+    statusCode,
     status: success,
     message,
   };

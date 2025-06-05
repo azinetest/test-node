@@ -1,0 +1,19 @@
+[
+  {
+    "first_name": "Super",
+    "last_name": "Admin",
+    "email": "super.a@azine.in",
+    "phone": "7896541230",
+    "password": "SuperAdmin@123",
+    "status": 1,
+    "parent_id": null,
+    "profile_pic": "",
+    "company_profile": {
+      "name": "Azine Web Technologies",
+      "email": "azine@google.com",
+      "phone": "7896541230"
+    },
+    "expired_at": "2050-12-31",
+    "username": "superAdmin"
+  }
+]

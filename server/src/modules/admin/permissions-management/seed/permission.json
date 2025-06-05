@@ -3,24 +3,108 @@
     "name": "Create Permission",
     "slug": "create-permission",
     "module": "Permission",
-    "description": "Allows creating a new permission"
+    "description": "Grants the ability to create new permissions."
   },
   {
     "name": "Read Permission",
     "slug": "read-permission",
     "module": "Permission",
-    "description": "Allows viewing permissions"
+    "description": "Grants the ability to view existing permissions."
   },
   {
     "name": "Update Permission",
     "slug": "update-permission",
     "module": "Permission",
-    "description": "Allows updating existing permissions"
+    "description": "Grants the ability to update existing permissions."
   },
   {
     "name": "Delete Permission",
     "slug": "delete-permission",
     "module": "Permission",
-    "description": "Allows deleting permissions"
+    "description": "Grants the ability to delete existing permissions."
+  },
+  {
+    "name": "Create Role",
+    "slug": "create-role",
+    "module": "Role",
+    "description": "Grants the ability to create new roles."
+  },
+  {
+    "name": "Read Role",
+    "slug": "read-role",
+    "module": "Role",
+    "description": "Grants the ability to view roles."
+  },
+  {
+    "name": "Update Role",
+    "slug": "update-role",
+    "module": "Role",
+    "description": "Grants the ability to update existing roles."
+  },
+  {
+    "name": "Delete Role",
+    "slug": "delete-role",
+    "module": "Role",
+    "description": "Grants the ability to delete roles."
+  },
+  {
+    "name": "Create Service",
+    "slug": "create-service",
+    "module": "Service",
+    "description": "Grants the ability to create new services."
+  },
+  {
+    "name": "Read Service",
+    "slug": "read-service",
+    "module": "Service",
+    "description": "Grants the ability to view existing services."
+  },
+  {
+    "name": "Update Service",
+    "slug": "update-service",
+    "module": "Service",
+    "description": "Grants the ability to update existing services."
+  },
+  {
+    "name": "Create User",
+    "slug": "create-user",
+    "module": "User",
+    "description": "Grants the ability to create new users."
+  },
+  {
+    "name": "Read User",
+    "slug": "read-user",
+    "module": "User",
+    "description": "Grants the ability to view existing users."
+  },
+  {
+    "name": "Update User",
+    "slug": "update-user",
+    "module": "User",
+    "description": "Grants the ability to update existing users."
+  },
+  {
+    "name": "Create AML Person Info Request",
+    "slug": "create-aml-person-info-request",
+    "module": "AML",
+    "description": "Grants the ability to create AML person info requests."
+  },
+  {
+    "name": "Create AML Organization Info Request",
+    "slug": "create-aml-organization-info-request",
+    "module": "AML",
+    "description": "Grants the ability to create AML organization info requests."
+  },
+  {
+    "name": "Create Trust Request",
+    "slug": "create-trust-request",
+    "module": "Trust",
+    "description": "Grants the ability to create trust requests."
+  },
+  {
+    "name": "Create Social Request",
+    "slug": "create-social-request",
+    "module": "Social",
+    "description": "Grants the ability to create social requests."
   }
 ]

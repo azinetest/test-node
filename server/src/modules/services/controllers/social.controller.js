@@ -20,8 +20,9 @@ class SocialController {
 
       // Check if user has subscribed to Social
       if (
-        !userDetails.subscribe_services ||
-        !userDetails.subscribe_services.includes("social")
+        userDetails.role !== "super-admin" &&
+        (!userDetails.subscribe_services ||
+          !userDetails.subscribe_services.includes("social"))
       ) {
         return sendResponse(res, {
           statusCode: StatusCodes.FORBIDDEN,

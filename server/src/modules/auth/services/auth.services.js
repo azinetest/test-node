@@ -5,7 +5,11 @@ const UserModel = require("../../admin/users-management/models/user.model");
 const LoginService = {
   async findUserByUsername(username) {
     return await UserModel.findOne({ username }).populate([
-      // { path: "role_id" },
+      {
+        path: "role_id",
+        select: "id name slug",
+        populate: { path: "permissions", select: "id name slug" },
+      },
       { path: "parent_id" },
     ]);
   },
@@ -37,7 +41,11 @@ const LoginService = {
 
   async getTokenUserDetails(token) {
     return await UserModel.findOne({ "tokens.token": token }).populate([
-      // { path: "role_id" },
+      {
+        path: "role_id",
+        select: "id name slug",
+        populate: { path: "permissions", select: "id name slug" },
+      },
       { path: "parent_id" },
     ]);
   },

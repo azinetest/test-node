@@ -55,12 +55,12 @@ const UsersSchema = new mongoose.Schema(
     },
     role_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Roles",
+      ref: "Role",
       default: null,
     },
     parent_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       default: null,
     },
     profile_pic: { type: String, trim: true },
@@ -90,12 +90,12 @@ const UsersSchema = new mongoose.Schema(
     ],
     created_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       default: null,
     },
     updated_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       default: null,
     },
   },

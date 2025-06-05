@@ -36,8 +36,9 @@ class AMLController {
 
       // Check if user has subscribed to AML
       if (
-        !userDetails.subscribe_services ||
-        !userDetails.subscribe_services.includes("aml")
+        userDetails.role !== "super-admin" &&
+        (!userDetails.subscribe_services ||
+          !userDetails.subscribe_services.includes("aml"))
       ) {
         return sendResponse(res, {
           statusCode: StatusCodes.FORBIDDEN,
@@ -64,7 +65,7 @@ class AMLController {
         monitoring: monitoring || "false",
       };
 
-      // // Call the AML service
+      // Call the AML service
       const amlResponse = await AMLService.requestInfo(
         envType,
         requestData,

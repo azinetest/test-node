@@ -9,7 +9,7 @@ const baseSchema = {
   status: Joi.boolean(),
   role_id: Joi.string().hex().length(24),
   profile_pic: Joi.string().uri(),
-  company_profile: Joi.string().hex().length(24),
+  company_profile: Joi.object().optional(),
   subscribe_services: Joi.array().items(Joi.string()),
   expired_at: Joi.date().iso(),
   extra_user_limit: Joi.number().integer().min(0),

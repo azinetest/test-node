@@ -20,8 +20,9 @@ class TrustController {
 
       // Check if user has subscribed to Trust
       if (
-        !userDetails.subscribe_services ||
-        !userDetails.subscribe_services.includes("trust")
+        userDetails.role !== "super-admin" &&
+        (!userDetails.subscribe_services ||
+          !userDetails.subscribe_services.includes("trust"))
       ) {
         return sendResponse(res, {
           statusCode: StatusCodes.FORBIDDEN,
