@@ -1,6 +1,22 @@
 const mongoose = require("mongoose");
 
-const ServiceSchema = mongoose.Schema(
+const TokenSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    token: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { _id: false }
+);
+
+const ServiceSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -12,7 +28,7 @@ const ServiceSchema = mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      Lowercase: true,
+      lowercase: true, // corrected case
     },
     prefix: {
       type: String,
@@ -25,6 +41,16 @@ const ServiceSchema = mongoose.Schema(
       required: true,
       default: 1,
       comment: "0 - Inactive, 1 - Active",
+    },
+    tokens: {
+      sandbox: {
+        type: TokenSchema,
+        required: false,
+      },
+      production: {
+        type: TokenSchema,
+        required: false,
+      },
     },
     mastersheet: {
       type: Array,
@@ -43,6 +69,7 @@ const ServiceSchema = mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

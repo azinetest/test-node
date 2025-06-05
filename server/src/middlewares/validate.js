@@ -1,3 +1,5 @@
+const { StatusCodes } = require("http-status-codes");
+
 // middlewares/validate.js
 module.exports = (schema) => {
   return (req, res, next) => {
@@ -11,7 +13,7 @@ module.exports = (schema) => {
         }
       });
 
-      return res.status(400).json({
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
         status: false,
         message: "Validation failed.",
         errors,
