@@ -13,6 +13,9 @@ import ForgotPassword from "@/pages/auth/ForgotPassword";
 import TokenInvalid from "@/pages/auth/TokenInvalid";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
+import RoleList from "@/pages/role/RoleList";
+import RoleForm from "@/pages/role/RoleForm";
+import RoleView from "@/pages/role/RoleView";
 
 const queryClient = new QueryClient();
 
@@ -32,12 +35,22 @@ const App = () => (
               <Route path="/token-invalid" element={<PublicRoute><TokenInvalid /></PublicRoute>} />
 
               {/* Protected Routes */}
-              <Route path="/dashboard" element={
+              <Route element={
                 <ProtectedRoute>
                   <DashboardLayout />
                 </ProtectedRoute>
               }>
-                <Route index element={<Dashboard />} />
+                {/* Dashboard route */}
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Roles routes */}
+                <Route path="roles">
+                  <Route index element={<RoleList />} />
+                  <Route path="create" element={<RoleForm />} />
+                  <Route path="edit/:id" element={<RoleForm isEdit={true} />} />
+                  <Route path="view/:id" element={<RoleView />} />
+                </Route>
+
               </Route>
 
               {/* Fallback */}

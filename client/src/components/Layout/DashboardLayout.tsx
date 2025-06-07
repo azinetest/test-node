@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Menu, Settings, User, LogOut, Moon, Sun, Palette, LayoutDashboard } from 'lucide-react';
+import { Menu, LogOut, Moon, Sun, Palette, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import { logout } from '@/api/auth';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -23,6 +23,12 @@ const DashboardLayout = () => {
       icon: LayoutDashboard,
       href: "/dashboard",
       isActive: location.pathname === "/dashboard",
+    },
+    {
+      title: "Roles",
+      icon: ShieldCheck,
+      href: "/roles",
+      isActive: location.pathname === "/roles",
     },
   ];
 
