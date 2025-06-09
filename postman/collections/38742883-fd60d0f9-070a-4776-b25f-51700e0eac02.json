@@ -1293,6 +1293,43 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Role | Get All Copy",
+							"id": "38742883-076879be-a5a4-4843-810e-f7f201d66dce",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Permission Role\",\r\n    \"description\": \"Allow to manage permission\",\r\n    \"permissions\": [\r\n        \"684127a25c742a930d285f0b\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APP_URL}}/admin/role",
+									"host": [
+										"{{APP_URL}}"
+									],
+									"path": [
+										"admin",
+										"role"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"id": "38742883-f3629b21-1e61-44a2-9a6d-99ba9b414328"
