@@ -1295,7 +1295,7 @@
 							"response": []
 						},
 						{
-							"name": "Role | Get All Copy",
+							"name": "Role | Get By ID",
 							"id": "38742883-076879be-a5a4-4843-810e-f7f201d66dce",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1319,13 +1319,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{APP_URL}}/admin/role",
+									"raw": "{{APP_URL}}/admin/role/id",
 									"host": [
 										"{{APP_URL}}"
 									],
 									"path": [
 										"admin",
-										"role"
+										"role",
+										"id"
 									]
 								}
 							},
