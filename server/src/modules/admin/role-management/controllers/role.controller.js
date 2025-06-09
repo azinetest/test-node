@@ -1,7 +1,7 @@
 const RoleService = require("../services/role.service");
 const { StatusCodes } = require("http-status-codes");
 const slugify = require("slugify");
-const { getAccessControlQuery } = require("../../../../utils/accessControl");
+const getAccessControlQuery = require("../../../../utils/accessControl");
 
 class RoleController {
   async create(req, res) {

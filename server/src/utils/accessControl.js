@@ -1,5 +1,6 @@
 module.exports = (user, extraConditions = {}) => {
-  if (user.role === "super_admin") {
+  console.log();
+  if (user.role_id?.slug === "super-admin") {
     return { ...extraConditions };
   } else {
     return {
