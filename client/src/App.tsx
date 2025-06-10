@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { UserProvider } from '@/contexts/UserContext';
 import { ProtectedRoute, PublicRoute } from "@/components/routes/ProtectedRoute";
 import DashboardLayout from "@/components/Layout/DashboardLayout";
 import Login from "@/pages/auth/Login";
@@ -16,6 +16,8 @@ import NotFound from "@/pages/NotFound";
 import RoleList from "@/pages/role/RoleList";
 import RoleForm from "@/pages/role/RoleForm";
 import RoleView from "@/pages/role/RoleView";
+import { PermissionGuard } from '@/components/common/AccessControl';
+import Forbidden from "./pages/errors/Forbidden";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +25,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
-        <AuthProvider>
+        <UserProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -46,18 +48,30 @@ const App = () => (
                 {/* Roles routes */}
                 <Route path="roles">
                   <Route index element={<RoleList />} />
-                  <Route path="create" element={<RoleForm />} />
-                  <Route path="edit/:id" element={<RoleForm />} />
-                  <Route path="view/:id" element={<RoleView />} />
+                  <Route path="create" element={
+                    <PermissionGuard permission="create-role">
+                      <RoleForm />
+                    </PermissionGuard>} />
+                  <Route path="edit/:id" element={
+                    <PermissionGuard permission="update-role">
+                      <RoleForm />
+                    </PermissionGuard>}
+                  />
+                  <Route path="view/:id" element={
+                    <PermissionGuard permission="read-role">
+                      <RoleView />
+                    </PermissionGuard>}
+                  />
                 </Route>
 
               </Route>
 
               {/* Fallback */}
               <Route path="*" element={<NotFound />} />
+              <Route path="/forbidden" element={<Forbidden />} />
             </Routes>
           </BrowserRouter>
-        </AuthProvider>
+        </UserProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

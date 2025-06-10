@@ -15,6 +15,7 @@ module.exports = (schema) => {
 
       return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
         status: false,
+        statusCode: 422,
         message: "Validation failed.",
         errors,
       });

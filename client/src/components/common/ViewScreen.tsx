@@ -1,4 +1,4 @@
-
+// ViewScreen.tsx
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,14 +7,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowLeft, Edit, Trash2, MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-interface ViewField {
+export interface ViewField {
   label: string;
   value: string | number | React.ReactNode;
   type?: 'text' | 'badge' | 'avatar' | 'date' | 'custom';
   variant?: 'default' | 'secondary' | 'destructive' | 'outline';
 }
 
-interface ViewScreenProps {
+export interface ViewScreenProps {
   title: string;
   subtitle?: string;
   avatar?: {

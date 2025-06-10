@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CanAccess } from "@/components/common/AccessControl";
 
 // Define TypeScript interface for props
 interface PageHeaderProps {
@@ -10,6 +11,7 @@ interface PageHeaderProps {
     addButtonLink?: string;
     addButtonText?: string;
     className?: string;
+    permission?: string;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -18,6 +20,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     addButtonLink,
     addButtonText = "Add Role",
     className = "",
+    permission,
 }) => {
     return (
         <div
@@ -35,12 +38,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             </div>
 
             {addButtonLink && (
-                <Link to={addButtonLink}>
-                    <Button className="bg-gradient-to-r from-primary to-primary/80 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                        <Plus className="mr-2 h-4 w-4" />
-                        {addButtonText}
-                    </Button>
-                </Link>
+                <CanAccess permission={permission}>
+                    <Link to={addButtonLink}>
+                        <Button className="bg-gradient-to-r from-primary to-primary/80 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <Plus className="mr-2 h-4 w-4" />
+                            {addButtonText}
+                        </Button>
+                    </Link>
+                </CanAccess>
             )}
         </div>
     );

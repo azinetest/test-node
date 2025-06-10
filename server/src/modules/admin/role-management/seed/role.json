@@ -2,11 +2,15 @@
   {
     "name": "Super Admin",
     "slug": "super-admin",
-    "description": "Allows access to all features and settings."
+    "description": "Allows access to all features and settings.",
+    "status": true,
+    "editable": false
   },
   {
     "name": "Guest",
     "slug": "guest",
-    "description": "Can only log in but has no access to any features."
+    "description": "Can only log in but has no access to any features.",
+    "status": true,
+    "editable": false
   }
 ]

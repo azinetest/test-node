@@ -15,6 +15,7 @@ interface ListingProps<T> {
     addButtonText?: string;
     addButtonLink?: string;
     className?: string;
+    permission?: string;
     tableTitle?: string;
     tableDescription?: string;
 }
@@ -29,6 +30,7 @@ const Listing = <T,>({
     addButtonText = 'Add New',
     addButtonLink,
     className,
+    permission,
     tableTitle = 'Enhanced Data Table',
     tableDescription = 'Advanced data table with sorting, filtering, pagination and column visibility controls.',
 }: ListingProps<T>) => {
@@ -39,6 +41,7 @@ const Listing = <T,>({
                 description={description}
                 addButtonLink={addButtonLink}
                 addButtonText={addButtonText}
+                permission={permission}
             />
 
             <Card className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-xl border-border/50 shadow-xl">

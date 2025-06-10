@@ -15,11 +15,21 @@ const RoleSchema = mongoose.Schema(
       unique: true,
       lowercase: true,
     },
+    description: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    editable: {
+       type: String,
+      enum: [true, false],
+      default: true,
+    },
     permissions: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Permission",
-      }
+      },
     ],
     created_by: {
       type: mongoose.Schema.Types.ObjectId,
@@ -29,9 +39,15 @@ const RoleSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    status: {
+      type: String,
+      enum: [true, false],
+      default: true,
+    },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
