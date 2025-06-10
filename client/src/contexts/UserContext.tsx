@@ -1,5 +1,12 @@
 // contexts/UserContext.tsx
-import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from "react";
 import { getMe } from "@/api/auth";
 
 // Types based on API response
@@ -41,6 +48,7 @@ interface UserContextType {
   user: AuthUser | null;
   loading: boolean;
   refetchUser: () => Promise<void>;
+  setUser?: React.Dispatch<React.SetStateAction<AuthUser | null>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -73,7 +81,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loading, refetchUser: fetchMe }}>
+    <UserContext.Provider
+      value={{ user, setUser, loading, refetchUser: fetchMe }}
+    >
       {children}
     </UserContext.Provider>
   );

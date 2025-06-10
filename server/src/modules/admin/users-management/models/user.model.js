@@ -7,8 +7,6 @@ const companyProfileSchema = new mongoose.Schema(
     name: { type: String, trim: true },
     email: { type: String, trim: true, lowercase: true },
     phone: { type: String, trim: true },
-    favicon: { type: String, trim: true },
-    logo: { type: String, trim: true },
   },
   { _id: false }
 );
@@ -64,7 +62,8 @@ const UsersSchema = new mongoose.Schema(
       default: null,
     },
     profile_pic: { type: String, trim: true },
-
+    favicon: { type: String, trim: true },
+    logo: { type: String, trim: true },
     company_profile: companyProfileSchema,
     subscribe_services: [subscribeServiceSchema],
 

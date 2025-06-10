@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { login } from '@/api/auth';
-import { useTheme } from '@/contexts/ThemeContext';
-import idmeritLogo from '@/assets/company/idmerit-logo.svg';
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { login } from "@/api/auth";
+import { useTheme } from "@/contexts/ThemeContext";
+import idmeritLogo from "@/assets/company/idmerit-logo.svg";
+import { useUser } from "@/contexts/UserContext";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useUser(); // updated destructure
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -26,9 +27,9 @@ const Login = () => {
 
     if (!formData.username || !formData.password) {
       toast({
-        title: 'Validation error',
-        description: 'Username and password are required.',
-        variant: 'destructive',
+        title: "Validation error",
+        description: "Username and password are required.",
+        variant: "destructive",
       });
       setIsLoading(false);
       return;
@@ -36,28 +37,29 @@ const Login = () => {
 
     try {
       const response = await login(formData);
+      setUser(response.data);
       toast({
-        title: 'Login successful',
-        description: response.message || 'Welcome back!',
-        variant: 'default',
+        title: "Login successful",
+        description: response.message || "Welcome back!",
+        variant: "default",
       });
 
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
     } catch (error: any) {
       if (error.errors) {
         Object.entries(error.errors).map(([field, message]) => {
           toast({
             title: `Validation error in ${field}`,
             description: String(message),
-            variant: 'destructive',
+            variant: "destructive",
           });
         });
       } else {
         toast({
-          title: 'Login failed',
-          description: error.message || 'An unexpected error occurred.',
-          variant: 'destructive',
+          title: "Login failed",
+          description: error.message || "An unexpected error occurred.",
+          variant: "destructive",
         });
       }
     } finally {
@@ -75,45 +77,55 @@ const Login = () => {
 
   // Map primaryColor to gradient classes for consistency with DashboardLayout
   const getGradientClass = () => {
-    if (primaryColor.startsWith('gradient-')) {
+    if (primaryColor.startsWith("gradient-")) {
       return primaryColor;
     }
     const gradientMap: { [key: string]: string } = {
-      blue: 'from-blue-600 to-cyan-500',
-      purple: 'from-purple-600 to-pink-500',
-      green: 'from-green-600 to-emerald-500',
-      orange: 'from-orange-600 to-amber-500',
-      red: 'from-red-600 to-rose-500',
-      pink: 'from-pink-600 to-fuchsia-500',
-      indigo: 'from-indigo-600 to-blue-500',
-      teal: 'from-teal-600 to-cyan-500',
-      emerald: 'from-emerald-600 to-green-500',
-      amber: 'from-amber-600 to-orange-500',
-      violet: 'from-violet-600 to-purple-500',
-      fuchsia: 'from-fuchsia-600 to-pink-500',
-      lime: 'from-lime-600 to-green-500',
-      rose: 'from-rose-600 to-red-500',
-      sky: 'from-sky-600 to-cyan-500',
+      blue: "from-blue-600 to-cyan-500",
+      purple: "from-purple-600 to-pink-500",
+      green: "from-green-600 to-emerald-500",
+      orange: "from-orange-600 to-amber-500",
+      red: "from-red-600 to-rose-500",
+      pink: "from-pink-600 to-fuchsia-500",
+      indigo: "from-indigo-600 to-blue-500",
+      teal: "from-teal-600 to-cyan-500",
+      emerald: "from-emerald-600 to-green-500",
+      amber: "from-amber-600 to-orange-500",
+      violet: "from-violet-600 to-purple-500",
+      fuchsia: "from-fuchsia-600 to-pink-500",
+      lime: "from-lime-600 to-green-500",
+      rose: "from-rose-600 to-red-500",
+      sky: "from-sky-600 to-cyan-500",
     };
-    return gradientMap[primaryColor] || 'from-blue-600 to-cyan-500';
+    return gradientMap[primaryColor] || "from-blue-600 to-cyan-500";
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${getGradientClass()} relative overflow-hidden`}>
+    <div
+      className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${getGradientClass()} relative overflow-hidden`}
+    >
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/15 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div
+        className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/15 to-transparent rounded-full blur-2xl animate-pulse"
+        style={{ animationDelay: "1s" }}
+      />
 
       <div className="flex flex-col lg:flex-row w-full max-w-5xl bg-card/50 backdrop-blur-xl rounded-xl shadow-2xl relative z-10">
         {/* Left: Branding */}
         <div className="flex flex-col items-center justify-center w-full lg:w-1/2 p-10">
-          <img src={idmeritLogo} alt="IDMerit" className="h-16 mb-4 filter brightness-110 hover:brightness-125 transition-all duration-300" />
+          <img
+            src={idmeritLogo}
+            alt="IDMerit"
+            className="h-16 mb-4 filter brightness-110 hover:brightness-125 transition-all duration-300"
+          />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
             Welcome to <span className="text-primary">IDMKyx</span>
           </h1>
           <p className="mt-4 text-muted-foreground text-lg max-w-sm text-center">
-            Delivering on our vision of fighting fraud and creating trust in the digital world, one identity at a time.
+            Delivering on our vision of fighting fraud and creating trust in the
+            digital world, one identity at a time.
           </p>
         </div>
 
@@ -121,14 +133,18 @@ const Login = () => {
         <div className="w-full lg:w-1/2 bg-card/95 backdrop-blur-xl p-8 rounded-lg lg:rounded-l-none">
           <div className="space-y-6">
             <div className="flex items-center justify-center mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-r ${getGradientClass()} rounded-full flex items-center justify-center shadow-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-300`}>
+              <div
+                className={`w-12 h-12 bg-gradient-to-r ${getGradientClass()} rounded-full flex items-center justify-center shadow-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-300`}
+              >
                 <LogIn className="w-6 h-6 text-white animate-pulse" />
               </div>
             </div>
             <h2 className="text-2xl font-semibold text-foreground text-center">
               Sign in to Your Account
             </h2>
-            <p className="text-center text-muted-foreground">Enter your credentials below</p>
+            <p className="text-center text-muted-foreground">
+              Enter your credentials below
+            </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -150,7 +166,7 @@ const Login = () => {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
@@ -186,7 +202,7 @@ const Login = () => {
                 className={`w-full bg-gradient-to-r ${getGradientClass()} hover:opacity-90 text-primary-foreground py-2 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
           </div>

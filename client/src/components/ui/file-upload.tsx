@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { Upload, X, FileIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -19,6 +18,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const [isDragOver, setIsDragOver] = React.useState(false)
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -34,7 +34,7 @@ export function FileUpload({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
-    
+
     const files = Array.from(e.dataTransfer.files)
     if (files.length > 0) {
       handleFileSelection(files[0])
@@ -46,9 +46,17 @@ export function FileUpload({
       alert(`File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`)
       return
     }
-    
+
     setSelectedFile(file)
     onFileSelect(file)
+
+    // If file is image, generate preview URL
+    if (file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+    } else {
+      setPreviewUrl(null)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +69,7 @@ export function FileUpload({
   const removeFile = () => {
     setSelectedFile(null)
     onFileSelect(null)
+    setPreviewUrl(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -74,6 +83,15 @@ export function FileUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
   }
 
+  // Cleanup object URL when component unmounts or file changes
+  React.useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    }
+  }, [previewUrl])
+
   return (
     <div className={cn("w-full", className)}>
       <input
@@ -83,19 +101,32 @@ export function FileUpload({
         onChange={handleInputChange}
         className="hidden"
       />
-      
+
       {selectedFile ? (
-        <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-muted/50">
-          <div className="flex items-center space-x-3">
-            <FileIcon className="h-8 w-8 text-primary" />
-            <div>
-              <p className="text-sm font-medium">{selectedFile.name}</p>
-              <p className="text-xs text-muted-foreground">{formatFileSize(selectedFile.size)}</p>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-muted/50">
+            <div className="flex items-center space-x-3">
+              <FileIcon className="h-8 w-8 text-primary" />
+              <div>
+                <p className="text-sm font-medium">{selectedFile.name}</p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(selectedFile.size)}</p>
+              </div>
             </div>
+            <Button variant="ghost" size="sm" onClick={removeFile}>
+              <X className="h-4 w-4" />
+            </Button>
           </div>
-          <Button variant="ghost" size="sm" onClick={removeFile}>
-            <X className="h-4 w-4" />
-          </Button>
+
+          {/* Image preview */}
+          {previewUrl && (
+            <div className="w-40 h-40 overflow-hidden rounded-md border border-border bg-white shadow-sm">
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="object-contain w-full h-full"
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div

@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ColumnDef } from '@tanstack/react-table';
-import { MoreVertical, ArrowUpDown } from 'lucide-react';
-import Listing from '@/components/ui/listing';
-import { getUsers } from '@/api/users';
-import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
-import { useUser } from '@/contexts/UserContext';
-import { CanAccess } from '@/guards/AccessControl';
-import { PERMISSIONS } from '@/constants/permissions';
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreVertical, ArrowUpDown } from "lucide-react";
+import Listing from "@/components/ui/listing";
+import { getUsers } from "@/api/users";
+import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
+import { CanAccess } from "@/guards/AccessControl";
+import { PERMISSIONS } from "@/constants/permissions";
 
 // Types based on API response
 interface CompanyProfile {
@@ -36,6 +41,8 @@ interface User {
   role_id: Role;
   parent_id: string | null;
   profile_pic: string;
+  logo: string;
+  favicon: string;
   company_profile: CompanyProfile;
   subscribe_services: string[];
   expired_at: string;
@@ -57,9 +64,9 @@ const UserList = () => {
       const response = await getUsers();
       if (response.statusCode !== 200) {
         toast({
-          title: 'Error fetching users',
-          description: 'Unable to load users from the server.',
-          variant: 'destructive',
+          title: "Error fetching users",
+          description: "Unable to load users from the server.",
+          variant: "destructive",
         });
         return;
       }
@@ -68,39 +75,41 @@ const UserList = () => {
     fetchData();
   }, []);
 
-  const getStatusColor = (status: number): 'default' | 'secondary' | 'destructive' => {
+  const getStatusColor = (
+    status: number
+  ): "default" | "secondary" | "destructive" => {
     switch (status) {
       case 1:
-        return 'default'; // Active
+        return "default"; // Active
       case 0:
-        return 'secondary'; // Inactive
+        return "secondary"; // Inactive
       case 2:
-        return 'destructive'; // Block
+        return "destructive"; // Block
       default:
-        return 'secondary';
+        return "secondary";
     }
   };
 
   const getStatusLabel = (status: number): string => {
     switch (status) {
       case 1:
-        return 'Active';
+        return "Active";
       case 0:
-        return 'Inactive';
+        return "Inactive";
       case 2:
-        return 'Block';
+        return "Block";
       default:
-        return 'Unknown';
+        return "Unknown";
     }
   };
 
   const columns: ColumnDef<User>[] = [
     {
-      id: 'full_name',
+      id: "full_name",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Full Name
@@ -119,53 +128,59 @@ const UserList = () => {
       },
     },
     {
-      accessorKey: 'username',
+      accessorKey: "username",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Username
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('username')}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.getValue("username")}</div>
+      ),
     },
     {
-      accessorKey: 'email',
+      accessorKey: "email",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('email')}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.getValue("email")}</div>
+      ),
     },
     {
-      accessorKey: 'role_id.name',
+      accessorKey: "role_id.name",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Role
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.role_id.name}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.original.role_id.name}</div>
+      ),
     },
     {
-      accessorKey: 'status',
+      accessorKey: "status",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Status
@@ -173,7 +188,7 @@ const UserList = () => {
         </Button>
       ),
       cell: ({ row }) => {
-        const status = row.getValue('status') as number;
+        const status = row.getValue("status") as number;
         return (
           <Badge
             variant={getStatusColor(status)}
@@ -185,39 +200,45 @@ const UserList = () => {
       },
     },
     {
-      accessorKey: 'expired_at',
+      accessorKey: "expired_at",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Expire At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('expired_at')}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">
+          {row.getValue("expired_at")}
+        </div>
+      ),
     },
     {
-      accessorKey: 'createdAt',
+      accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-primary/10 transition-colors"
         >
           Created At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('createdAt')}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.getValue("createdAt")}</div>
+      ),
     },
     {
-      id: 'actions',
+      id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const isEditable = row.original.role_id.slug !== 'super-admin';
-        const isSuperAdminUser = user.role_id.slug === 'super-admin';
+        const isEditable = row.original.role_id.slug !== "super-admin";
+        const isSuperAdminUser = user.role_id.slug === "super-admin";
         const canEdit = isEditable || (isSuperAdminUser && !isEditable);
 
         return (
@@ -230,7 +251,10 @@ const UserList = () => {
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-card/95 backdrop-blur-xl border-border/50">
+            <DropdownMenuContent
+              align="end"
+              className="bg-card/95 backdrop-blur-xl border-border/50"
+            >
               <Link to={`/users/view/${row.original._id}`}>
                 <DropdownMenuItem className="hover:bg-primary/10 transition-colors">
                   View User
@@ -263,6 +287,7 @@ const UserList = () => {
       addButtonText="Add User"
       addButtonLink="/users/create"
       permission={PERMISSIONS.USER.CREATE}
+      data-lov-id="users-table"
     />
   );
 };

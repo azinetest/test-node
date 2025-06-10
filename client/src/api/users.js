@@ -9,7 +9,16 @@ export const getUserProfile = async () => {
   }
 };
 
-export const updateUserProfile = async (userData) => {
+export const createUser = async (userData) => {
+  try {
+    const response = await axiosInstance.post("/admin/user", userData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to create user" };
+  }
+}
+
+export const updateUser = async (userData) => {
   try {
     const response = await axiosInstance.put("/user/profile", userData);
     return response.data;
