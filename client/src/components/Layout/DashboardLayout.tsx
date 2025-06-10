@@ -5,9 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Menu, LogOut, Moon, Sun, Palette, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react';
+import { Menu, LogOut, Moon, Sun, Palette, LayoutDashboard, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { logout } from '@/api/auth';
-import { UserProvider, useUser } from '@/contexts/UserContext';
+import { useUser } from '@/contexts/UserContext';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import idmeritLogo from '@/assets/company/idmerit-logo.svg';
 
@@ -24,14 +24,21 @@ const DashboardLayout = () => {
       icon: LayoutDashboard,
       href: '/dashboard',
       isActive: location.pathname === '/dashboard',
-      gradient: 'from-blue-600 to-cyan-500',
+      gradient: 'from-' + primaryColor + '-600 to-cyan-500',
+    },
+    {
+      title: 'Users',
+      icon: Users,
+      href: '/users',
+      isActive: location.pathname.startsWith('/users'),
+      gradient: 'from-' + primaryColor + '-600 to-cyan-500',
     },
     {
       title: 'Roles',
       icon: ShieldCheck,
       href: '/roles',
       isActive: location.pathname.startsWith('/roles'),
-      gradient: 'from-purple-600 to-pink-500',
+      gradient: 'from-' + primaryColor + '-600 to-cyan-500',
     },
   ];
 
@@ -97,7 +104,7 @@ const DashboardLayout = () => {
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/15 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
 
       {/* Header with enhanced logo section */}
-      <div className="relative flex items-center justify-center px-6 py-4 border-b border-border/50">
+      <div className="relative flex items-center justify-center px-6 py-3 border-b border-border/50">
         <div className="relative flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-300 hover:scale-110">
             <Sparkles className="text-white h-5 w-5 animate-pulse" />
@@ -121,11 +128,10 @@ const DashboardLayout = () => {
               key={item.title}
               to={item.href}
               onClick={() => mobile && setSidebarOpen(false)}
-              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-500 transform hover:scale-[1.02] relative overflow-hidden ${
-                isActive
-                  ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25 scale-[1.02]'
-                  : 'hover:bg-gradient-to-r hover:from-muted hover:to-muted/50 hover:shadow-md'
-              }`}
+              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-500 transform hover:scale-[1.02] relative overflow-hidden ${isActive
+                ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25 scale-[1.02]'
+                : 'hover:bg-gradient-to-r hover:from-muted hover:to-muted/50 hover:shadow-md'
+                }`}
               style={{
                 animationDelay: `${index * 100}ms`,
               }}
@@ -140,11 +146,10 @@ const DashboardLayout = () => {
 
               <div className="relative z-10 flex items-center gap-3">
                 <div className={`p-1 rounded-lg ${isActive ? 'bg-white/20' : 'group-hover:bg-primary/10'} transition-all duration-300`}>
-                  <item.icon className={`h-5 w-5 transition-all duration-300 ${
-                    isActive
-                      ? 'scale-110 text-white'
-                      : 'group-hover:scale-105 group-hover:text-primary'
-                  }`} />
+                  <item.icon className={`h-5 w-5 transition-all duration-300 ${isActive
+                    ? 'scale-110 text-white'
+                    : 'group-hover:scale-105 group-hover:text-primary'
+                    }`} />
                 </div>
                 <span className={`font-medium transition-all duration-300 ${isActive ? 'text-white' : ''}`}>
                   {item.title}
@@ -176,7 +181,7 @@ const DashboardLayout = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-gradient-to-br from-background via-background/95 to-background/90">
+      <div className="flex h-screen w-full bg-gradient-to-br from-background via-background/95 to-background/90 overflow-hidden">
         <style>
           {`
             .scrollbar-visible::-webkit-scrollbar {
@@ -236,7 +241,7 @@ const DashboardLayout = () => {
         </style>
 
         {/* Desktop Sidebar */}
-        <div className="hidden Händenhidden md:block w-64 fixed top-0 left-0 h-screen border-r border-border/50 bg-card/50 backdrop-blur-xl">
+        <div className="hidden md:block w-64 flex-shrink-0 border-r border-border/50 bg-card/50 backdrop-blur-xl">
           <Sidebar />
         </div>
 
@@ -247,9 +252,10 @@ const DashboardLayout = () => {
           </SheetContent>
         </Sheet>
 
-        {/* Main Content */}
-        <SidebarInset className="md:ml-64">
-          <header className="border-b border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/30 sticky top-0 z-10">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Header */}
+          <header className="flex-shrink-0 border-b border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/30">
             <div className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-4">
                 <Sheet>
@@ -301,11 +307,10 @@ const DashboardLayout = () => {
                           <button
                             key={color.value}
                             onClick={() => setPrimaryColor(color.value as typeof primaryColor)}
-                            className={`w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-110 hover:shadow-lg relative overflow-hidden ${
-                              primaryColor === color.value
-                                ? 'border-foreground shadow-lg scale-110 ring-2 ring-offset-2 ring-primary'
-                                : 'border-transparent hover:border-muted-foreground'
-                            }`}
+                            className={`w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-110 hover:shadow-lg relative overflow-hidden ${primaryColor === color.value
+                              ? 'border-foreground shadow-lg scale-110 ring-2 ring-offset-2 ring-primary'
+                              : 'border-transparent hover:border-muted-foreground'
+                              }`}
                             style={{
                               backgroundColor: `hsl(${color.color})`,
                               boxShadow:
@@ -327,11 +332,10 @@ const DashboardLayout = () => {
                           <button
                             key={gradient.name}
                             onClick={() => setPrimaryColor(gradient.class as typeof primaryColor)}
-                            className={`w-8 h-8 rounded-lg ${gradient.class} cursor-pointer hover:scale-110 transition-transform relative overflow-hidden ${
-                              primaryColor === gradient.class
-                                ? 'ring-2 ring-offset-2 ring-primary'
-                                : ''
-                            }`}
+                            className={`w-8 h-8 rounded-lg ${gradient.class} cursor-pointer hover:scale-110 transition-transform relative overflow-hidden ${primaryColor === gradient.class
+                              ? 'ring-2 ring-offset-2 ring-primary'
+                              : ''
+                              }`}
                             title={gradient.name}
                           >
                             {primaryColor === gradient.class && (
@@ -383,13 +387,15 @@ const DashboardLayout = () => {
             </div>
           </header>
 
-          <main className="flex-1 p-6 overflow-y-auto">
-            <div className="animate-fade-in">
+          {/* Main Content - Scrollable */}
+          <main className="flex-1 overflow-y-auto scrollbar-visible">
+            <div className="p-6 animate-fade-in">
               <Outlet />
             </div>
           </main>
 
-          <footer className="border-t border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/30 px-6 py-4 mt-auto">
+          {/* Footer */}
+          <footer className="flex-shrink-0 border-t border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/30 px-6 py-4">
             <div className="flex items-center justify-center gap-2">
               <p className="text-sm text-muted-foreground">Powered by IDMerit</p>
               <img
@@ -399,7 +405,7 @@ const DashboardLayout = () => {
               />
             </div>
           </footer>
-        </SidebarInset>
+        </div>
       </div>
     </SidebarProvider>
   );

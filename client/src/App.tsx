@@ -19,8 +19,10 @@ import RoleView from "@/pages/role/RoleView";
 import { PermissionGuard } from '@/guards/AccessControl';
 import Forbidden from "./pages/errors/Forbidden";
 import { PERMISSIONS } from "@/constants/permissions";
-import { Tabs } from "./components/ui/tabs";
-import TabsDemo from "./pages/TabsDemo";
+import TabsDemo from "@/pages/TabsDemo";
+import UserList from "@/pages/user/UserList";
+import UserForm from "@/pages/user/UserForm";
+import UserView from "@/pages/user/UserView";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +66,25 @@ const App = () => (
                   <Route path="view/:id" element={
                     <PermissionGuard permission={PERMISSIONS.ROLE.READ}>
                       <RoleView />
+                    </PermissionGuard>}
+                  />
+                </Route>
+
+                {/* User routes */}
+                <Route path="users">
+                  <Route index element={<UserList />} />
+                  <Route path="create" element={
+                    <PermissionGuard permission={PERMISSIONS.USER.CREATE}>
+                      <UserForm />
+                    </PermissionGuard>} />
+                  <Route path="edit/:id" element={
+                    <PermissionGuard permission={PERMISSIONS.USER.UPDATE}>
+                      <UserForm />
+                    </PermissionGuard>}
+                  />
+                  <Route path="view/:id" element={
+                    <PermissionGuard permission={PERMISSIONS.USER.READ}>
+                      <UserView />
                     </PermissionGuard>}
                   />
                 </Route>
