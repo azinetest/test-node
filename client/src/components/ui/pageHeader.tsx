@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CanAccess } from "@/components/common/AccessControl";
+import { CanAccess } from "@/guards/AccessControl";
 
 // Define TypeScript interface for props
 interface PageHeaderProps {

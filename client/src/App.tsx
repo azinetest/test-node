@@ -12,12 +12,15 @@ import Register from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import TokenInvalid from "@/pages/auth/TokenInvalid";
 import Dashboard from "@/pages/Dashboard";
-import NotFound from "@/pages/NotFound";
+import NotFound from "@/pages/errors/NotFound";
 import RoleList from "@/pages/role/RoleList";
 import RoleForm from "@/pages/role/RoleForm";
 import RoleView from "@/pages/role/RoleView";
-import { PermissionGuard } from '@/components/common/AccessControl';
+import { PermissionGuard } from '@/guards/AccessControl';
 import Forbidden from "./pages/errors/Forbidden";
+import { PERMISSIONS } from "@/constants/permissions";
+import { Tabs } from "./components/ui/tabs";
+import TabsDemo from "./pages/TabsDemo";
 
 const queryClient = new QueryClient();
 
@@ -44,21 +47,22 @@ const App = () => (
               }>
                 {/* Dashboard route */}
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/tabs" element={<TabsDemo />} />
 
                 {/* Roles routes */}
                 <Route path="roles">
                   <Route index element={<RoleList />} />
                   <Route path="create" element={
-                    <PermissionGuard permission="create-role">
+                    <PermissionGuard permission={PERMISSIONS.ROLE.CREATE}>
                       <RoleForm />
                     </PermissionGuard>} />
                   <Route path="edit/:id" element={
-                    <PermissionGuard permission="update-role">
+                    <PermissionGuard permission={PERMISSIONS.ROLE.UPDATE}>
                       <RoleForm />
                     </PermissionGuard>}
                   />
                   <Route path="view/:id" element={
-                    <PermissionGuard permission="read-role">
+                    <PermissionGuard permission={PERMISSIONS.ROLE.READ}>
                       <RoleView />
                     </PermissionGuard>}
                   />

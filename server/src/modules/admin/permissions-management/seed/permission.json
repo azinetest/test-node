@@ -48,24 +48,6 @@
     "description": "Grants the ability to delete roles."
   },
   {
-    "name": "Create Service",
-    "slug": "create-service",
-    "module": "Service",
-    "description": "Grants the ability to create new services."
-  },
-  {
-    "name": "Read Service",
-    "slug": "read-service",
-    "module": "Service",
-    "description": "Grants the ability to view existing services."
-  },
-  {
-    "name": "Update Service",
-    "slug": "update-service",
-    "module": "Service",
-    "description": "Grants the ability to update existing services."
-  },
-  {
     "name": "Create User",
     "slug": "create-user",
     "module": "User",

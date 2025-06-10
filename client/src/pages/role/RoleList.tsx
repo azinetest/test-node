@@ -9,7 +9,8 @@ import { getRoles } from '@/api/roles';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import { UserProvider, useUser } from '@/contexts/UserContext';
-import { CanAccess } from "@/components/common/AccessControl";
+import { CanAccess } from "@/guards/AccessControl";
+import { PERMISSIONS } from '@/constants/permissions';
 
 interface Role {
     _id: number;
@@ -132,7 +133,7 @@ const RoleManagement = () => {
                                 </DropdownMenuItem>
                             </Link>
                             {canEdit && (
-                                <CanAccess permission="update-role">
+                                <CanAccess permission={PERMISSIONS.ROLE.UPDATE}>
                                     <Link to={`/roles/edit/${row.original._id}`}>
                                         <DropdownMenuItem className="hover:bg-primary/10 transition-colors">
                                             Edit Role
@@ -157,7 +158,7 @@ const RoleManagement = () => {
             searchPlaceholder="Search roles by name or description..."
             addButtonText="Add Role"
             addButtonLink="/roles/create"
-            permission="create-role"
+            permission={PERMISSIONS.ROLE.CREATE}
         />
     );
 };

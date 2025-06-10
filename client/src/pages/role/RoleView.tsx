@@ -13,6 +13,8 @@ import { useUser } from '@/contexts/UserContext';
 import { getRoleById } from '@/api/roles';
 import { useToast } from '@/hooks/use-toast';
 import PageHeader from '@/components/ui/pageHeader';
+import { CanAccess } from '@/guards/AccessControl';
+import { PERMISSIONS } from '@/constants/permissions';
 
 interface Permission {
   _id: string;
@@ -123,18 +125,14 @@ const RoleView = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card/95 backdrop-blur-xl border-border/50">
               {canEdit && (
-                <Link to={`/role/edit/${role._id}`}>
-                  <DropdownMenuItem className="hover:bg-primary/10 flex items-center gap-2">
-                    <Edit className="w-4 h-4" /> Edit
-                  </DropdownMenuItem>
-                </Link>
+                <CanAccess permission={PERMISSIONS.ROLE.UPDATE}>
+                  <Link to={`/role/edit/${role._id}`}>
+                    <DropdownMenuItem className="hover:bg-primary/10 flex items-center gap-2">
+                      <Edit className="w-4 h-4" /> Edit
+                    </DropdownMenuItem>
+                  </Link>
+                </CanAccess>
               )}
-              <DropdownMenuItem
-                onClick={() => alert('Delete clicked')}
-                className="text-destructive hover:bg-destructive/10 flex items-center gap-2"
-              >
-                <Trash2 className="w-4 h-4" /> Delete
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
