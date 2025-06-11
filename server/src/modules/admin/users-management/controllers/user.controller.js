@@ -2,7 +2,10 @@ const { StatusCodes } = require("http-status-codes");
 const UserService = require("../services/user.service");
 const sendResponse = require("../../../../utils/response");
 const getAccessControlQuery = require("../../../../utils/accessControl");
-const { createUserSchema, updateUserSchema } = require("../validators/user.validator");
+const {
+  createUserSchema,
+  updateUserSchema,
+} = require("../validators/user.validator");
 
 class UserController {
   // Create a new user
@@ -24,9 +27,6 @@ class UserController {
         extra_user_limit,
       } = req.body;
 
-      // Access uploaded files
-      const files = req.files || {};
-
       // Prepare data for validation
       const data = {
         first_name,
@@ -36,12 +36,14 @@ class UserController {
         password,
         status,
         role_id,
-        profile_pic: files.profile_pic?.[0]?.path,
-        logo: files.logo?.[0]?.path,
-        favicon: files.favicon?.[0]?.path,
+        profile_pic: files.profile_pic?.[0].filename,
+        logo: files.logo?.[0].filename,
+        favicon: files.favicon?.[0].filename,
         company_profile_name,
         company_profile_email,
-        subscribe_services: subscribe_services ? JSON.parse(subscribe_services) : [],
+        subscribe_services: subscribe_services
+          ? JSON.parse(subscribe_services)
+          : [],
         expired_at,
         extra_user_limit,
       };
@@ -139,7 +141,9 @@ class UserController {
         favicon: files.favicon?.[0]?.path,
         company_profile_name,
         company_profile_email,
-        subscribe_services: subscribe_services ? JSON.parse(subscribe_services) : [],
+        subscribe_services: subscribe_services
+          ? JSON.parse(subscribe_services)
+          : [],
         expired_at,
         extra_user_limit,
       };

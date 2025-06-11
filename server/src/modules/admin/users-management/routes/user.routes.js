@@ -8,10 +8,32 @@ const {
 const validate = require("../../../../middlewares/validate");
 const authorize = require("../../../../middlewares/authorize.middleware");
 const uploadMiddleware = require("../middlewares/multer.middleware");
-// Routes
-router.post("/", [authorize("create-user"), validate(createUserSchema), uploadMiddleware], userController.create); // Create a new user
-router.get("/", [authorize("read-user")], userController.getUsers); // Get all users
-router.get("/:id", [authorize("read-user")], userController.getUserById); // Get user by ID
-router.put("/:id", [authorize("update-user"), validate(updateUserSchema)], userController.update); // Update an existing user
 
+// Create a new user with image upload
+router.post(
+  "/",
+  [
+    authorize("create-user"),
+    validate(createUserSchema),
+    uploadMiddleware([
+      { name: "profile_pic", maxCount: 1 },
+      { name: "logo", maxCount: 1 },
+      { name: "favicon", maxCount: 1 },
+    ]),
+  ],
+  userController.create
+);
+
+// Get all users
+router.get("/", [authorize("read-user")], userController.getUsers);
+
+// Get user by ID
+router.get("/:id", [authorize("read-user")], userController.getUserById);
+
+// Update user
+router.put(
+  "/:id",
+  [authorize("update-user"), validate(updateUserSchema)],
+  userController.update
+);
 module.exports = router;

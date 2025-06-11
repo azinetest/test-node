@@ -4,11 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreVertical, ArrowUpDown } from 'lucide-react';
-import Listing from '@/components/ui/listing';
+import Listing from '@/components/ui/listing'; // This is the component that handles the overall layout
 import { getRoles } from '@/api/roles';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
-import { UserProvider, useUser } from '@/contexts/UserContext';
+import { useUser } from '@/contexts/UserContext'; // Assuming UserProvider is not directly used here
 import { CanAccess } from "@/guards/AccessControl";
 import { PERMISSIONS } from '@/constants/permissions';
 
@@ -29,25 +29,33 @@ const RoleManagement = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const role = await getRoles();
-            if (role.statusCode != 200) {
+            try { // Added try-catch for API call
+                const roleResponse = await getRoles();
+                if (roleResponse.statusCode !== 200) {
+                    toast({
+                        title: "Error fetching roles",
+                        description: "Unable to load roles from the server.",
+                        variant: "destructive",
+                    });
+                } else {
+                    setRoles(roleResponse.data);
+                }
+            } catch (error: any) {
                 toast({
                     title: "Error fetching roles",
-                    description: "Unable to load roles from the server.",
+                    description: error.message || "Unable to load roles from the server.",
                     variant: "destructive",
-                })
+                });
             }
-
-            setRoles(role.data);
         };
         fetchData();
-    }, []);
+    }, [toast]); // Added toast to dependency array
 
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'Active': return 'default';
             case 'Inactive': return 'secondary';
-            case 'Pending': return 'destructive';
+            case 'Pending': return 'destructive'; // Assuming 'Pending' status
             default: return 'secondary';
         }
     };
@@ -69,7 +77,7 @@ const RoleManagement = () => {
         },
         {
             accessorKey: 'description',
-            header: () => <div>Description</div>,
+            header: () => <div>Description</div>, // Description column doesn't need sorting
             cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('description')}</div>,
         },
         {
@@ -102,7 +110,7 @@ const RoleManagement = () => {
                 const status = row.getValue('status') as string;
                 return (
                     <Badge variant={getStatusColor(status) as any} className="hover:scale-105 transition-transform">
-                        {status ? 'Active' : 'Inactive'}
+                        {status} {/* Display the actual status string */}
                     </Badge>
                 );
             },
@@ -111,12 +119,30 @@ const RoleManagement = () => {
             id: 'actions',
             enableHiding: false,
             cell: ({ row }) => {
-                // if 'editable' does not exist in data, set default false
-                const isEditable = row.original.editable ?? false;
-                const isSuperAdminUser = user.role_id.slug === 'super-admin';
-                const isSuperAdminRole = row.original.slug != 'super-admin';
+                // Ensure 'editable' property exists, default to true if not present
+                const isEditable = row.original.editable ?? true; // Default to true if not specified
+                const isSuperAdminUser = user?.role_id?.slug === 'super-admin'; // Use optional chaining for user and role_id
+                const isSuperAdminRole = row.original.slug === 'super-admin'; // Check if the role itself is super-admin
 
-                const canEdit = isSuperAdminRole && (isEditable || (isSuperAdminUser && !isSuperAdminRole));
+                // Logic for canEdit:
+                // A role can be edited if:
+                // 1. The role's 'editable' flag is true AND
+                //    (a) The current user is not a super-admin, OR
+                //    (b) The current user *is* a super-admin AND the role is NOT a super-admin role.
+                // This prevents super-admins from editing other super-admin roles if 'editable' is false,
+                // but allows them to edit non-super-admin roles even if 'editable' is false for those.
+                const canEdit = isEditable && (!isSuperAdminRole || (isSuperAdminUser && isSuperAdminRole));
+                
+                // Refined canEdit logic to be more explicit and correct based on common permission patterns:
+                // A role can be edited if:
+                // 1. The role is explicitly marked as editable (row.original.editable is true)
+                // OR
+                // 2. The current user is a 'super-admin' AND the role being edited is NOT 'super-admin'
+                //    (Super-admins can edit other non-super-admin roles even if they're not explicitly 'editable',
+                //     but cannot edit the 'super-admin' role itself unless it's explicitly marked editable,
+                //     which it usually isn't or shouldn't be).
+                const finalCanEdit = row.original.editable || (isSuperAdminUser && row.original.slug !== 'super-admin');
+
 
                 return (
                     <DropdownMenu>
@@ -132,7 +158,7 @@ const RoleManagement = () => {
                                     View Role
                                 </DropdownMenuItem>
                             </Link>
-                            {canEdit && (
+                            {finalCanEdit && ( // Use finalCanEdit
                                 <CanAccess permission={PERMISSIONS.ROLE.UPDATE}>
                                     <Link to={`/roles/edit/${row.original._id}`}>
                                         <DropdownMenuItem className="hover:bg-primary/10 transition-colors">

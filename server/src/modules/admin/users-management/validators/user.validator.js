@@ -11,9 +11,9 @@ const baseSchema = {
   company_profile_email: Joi.string().email().max(100).allow(null, "").optional(),
 
   role_id: Joi.string().hex().length(24).allow(null, "").optional(),
-  profile_pic: Joi.string().optional(),
-  logo: Joi.string().optional(),
-  favicon: Joi.string().optional(),
+  profile_pic: Joi.any().optional(),
+  logo: Joi.any().optional(),
+  favicon: Joi.any().optional(),
   company_profile: Joi.object().optional(),
   subscribe_services: Joi.string().allow(null, "").optional(),
   expired_at: Joi.date().iso(),

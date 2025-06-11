@@ -73,7 +73,7 @@ const UserList = () => {
       setUsers(response.data);
     };
     fetchData();
-  }, []);
+  }, [toast]); // Added toast to dependency array
 
   const getStatusColor = (
     status: number

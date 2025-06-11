@@ -7,6 +7,7 @@ import { getPermissions, createRole, getRoleById, updateRole } from '@/api/roles
 import { useToast } from '@/hooks/use-toast';
 import { useParams, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'; // Import Card components
 
 const RoleForm = () => {
   const { toast } = useToast();
@@ -19,12 +20,13 @@ const RoleForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    permissions: selectedPermissions,
+    permissions: [] as string[], // Explicitly type as string[]
     status: true
   });
   const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
+    // Fetch permissions
     getPermissions()
       .then((data) => {
         if (data.statusCode !== 200) {
@@ -44,37 +46,46 @@ const RoleForm = () => {
           variant: "destructive",
         });
       });
+
+    // Fetch role data if in edit mode
     const fetchRole = async () => {
-      if (isEdit) {
-        const role = await getRoleById(id);
-        if (role.statusCode == 200 && role.data == null) {
+      if (isEdit && id) {
+        try {
+          const role = await getRoleById(id);
+          if (role.statusCode === 200 && role.data) {
+            const fetchedPermissions = role.data.permissions.map((permission) => permission._id);
+            setSelectedPermissions(fetchedPermissions);
+            setFormData({
+              name: role.data.name,
+              description: role.data.description,
+              permissions: fetchedPermissions, // Set permissions in formData as well
+              status: Boolean(role.data.status),
+            });
+          } else {
+            toast({
+              title: "Role Not Found",
+              description: "The requested role could not be found.",
+              variant: "destructive",
+            });
+            navigate("/roles"); // Redirect if role not found
+          }
+        } catch (error: any) {
           toast({
-            title: "Not Found",
-            description: "Role is not found.",
+            title: "Error fetching role data",
+            description: error.message || "Unable to load role details.",
             variant: "destructive",
           });
+          navigate("/roles"); // Redirect on error
         }
-        setSelectedPermissions(role.data.permissions.map((permission, index) => {
-          return permission._id;
-        }));
-        setFormData({
-          name: role.data.name,
-          description: role.data.description,
-          permissions: selectedPermissions,
-          status: Boolean(role.data.status),
-        });
-
       }
-    }
+    };
     fetchRole();
-  }, []);
+  }, [id, isEdit, navigate, toast]); // Added dependencies
 
   const getErrorForField = (field: string) => {
-    if (!errors.length) return null;
-    if (field === 'name' && errors.includes("Role name is required")) return "Role name is required";
-    if (field === 'description' && errors.includes("Description is required")) return "Description is required";
-    if (field === 'permissions' && errors.includes("At least one permission must be selected")) return "At least one permission must be selected";
-    return null;
+    // A more generic way to find errors
+    const specificError = errors.find(err => err.toLowerCase().includes(field.toLowerCase().replace('_', ' ')));
+    return specificError;
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -116,19 +127,29 @@ const RoleForm = () => {
 
     if (newErrors.length > 0) {
       setErrors(newErrors);
+      toast({
+        title: "Validation Error",
+        description: (
+          <ul className="list-disc pl-4">
+            {newErrors.map((err, i) => (
+              <li key={i} className="text-sm">{err}</li>
+            ))}
+          </ul>
+        ),
+        variant: "destructive",
+      });
       return;
     }
 
-    setErrors([]);
+    setErrors([]); // Clear errors if validation passes
 
     const payload = {
       ...formData,
-      permissions: selectedPermissions,
+      permissions: selectedPermissions, // Ensure permissions are from selectedPermissions state
     };
 
-    // Use updateRole if editing, else createRole
     const action = isEdit
-      ? updateRole(id, payload)  // assuming formData has id for the role
+      ? updateRole(id!, payload) // Use id! as it's guaranteed to exist in edit mode
       : createRole(payload);
 
     action
@@ -137,18 +158,20 @@ const RoleForm = () => {
           title: isEdit ? "Role updated" : "Role created",
           description: `Role "${formData.name}" has been ${isEdit ? "updated" : "created"} successfully.`,
         });
-        // Navigate after successful creation or update
-        navigate(-1);
+        navigate(-1); // Navigate back after successful operation
       })
       .catch((error) => {
         if (error.statusCode && error.statusCode === 422) {
-          const errors = error.errors || {};
-          const errorMessages = Object.entries(errors)
-            .map(([field, msg]) => `${field}: ${msg}`)
-            .join("\n");
+          const apiErrors = error.errors || {};
+          const errorMessages = Object.entries(apiErrors)
+            .map(([field, msg]) => (
+              <li key={field} className="text-sm">
+                <span className="font-semibold capitalize">{field.replace(/_/g, ' ')}</span>: {String(msg)}
+              </li>
+            ));
           toast({
             title: "Validation Error",
-            description: errorMessages,
+            description: <ul className="list-disc pl-4">{errorMessages}</ul>,
             variant: "destructive",
           });
         } else {
@@ -161,7 +184,6 @@ const RoleForm = () => {
       });
   };
 
-
   const groupPermissionsByModule = (permissions: any[]) => {
     return permissions.reduce((acc, perm) => {
       const module = perm.module || "Other";
@@ -173,16 +195,27 @@ const RoleForm = () => {
     }, {} as Record<string, typeof permissions>);
   };
 
+  const groupedPermissions = groupPermissionsByModule(permissions);
+
   return (
-    <>
+    // Removed `h-full` or fixed height classes from this main div if they were present before.
+    // The `space-y-6` provides vertical spacing. `animate-fade-in` is fine.
+    <div className="space-y-6 animate-fade-in">
       <PageHeader
         title={isEdit ? 'Edit Role' : 'Create Role'}
         description="Manage roles and permissions"
       />
-      <div className="w-full max-w-6xl mx-auto px-4 py-8">
-        <form className="space-y-6 w-full" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-6">
-            <div className="space-y-4 w-full">
+
+      {/* The form itself. `w-full` is fine. */}
+      <form className="space-y-8 w-full" onSubmit={handleSubmit}>
+        {/* Role Details Section */}
+        <Card className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-xl border-border/50 shadow-xl">
+          <CardHeader>
+            <CardTitle>Role Details</CardTitle>
+            <CardDescription>Basic information and status for the role.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Role Name */}
               <div>
                 <Label htmlFor="name" className="text-sm font-medium">
@@ -193,115 +226,121 @@ const RoleForm = () => {
                   placeholder="Enter role name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full"
+                  className="w-full mt-1"
                 />
                 {getErrorForField('name') && (
                   <p className="mt-1 text-sm text-red-600">{getErrorForField('name')}</p>
                 )}
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-end md:gap-6">
-
-                {/* DESCRIPTION */}
-                <div className="flex-1">
-                  <Label htmlFor="description" className="text-sm font-medium">
-                    Description <span className="text-red-600">*</span>
-                  </Label>
-                  <Input
-                    id="description"
-                    placeholder="Enter role description"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    className="w-full mt-1"
-                  />
-                  {getErrorForField('description') && (
-                    <p className="mt-1 text-sm text-red-600">{getErrorForField('description')}</p>
-                  )}
-                </div>
-
-                {/* STATUS */}
-                <div className="mt-4 md:mt-0">
-                  <Label htmlFor="status" className="text-sm font-medium">
-                    Status
-                  </Label>
-                  <div className="flex items-center space-x-3 mt-2">
-                    <Switch
-                      id="status"
-                      checked={formData.status}
-                      onCheckedChange={handleStatusToggle}
-                    />
-                    <span className="text-sm">{formData.status ? 'Active' : 'Inactive'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Permissions */}
-              <div className="space-y-6 mt-6">
-                <Label className="text-base font-semibold">
-                  Permissions <span className="text-red-600">*</span>
+              {/* Description */}
+              <div>
+                <Label htmlFor="description" className="text-sm font-medium">
+                  Description <span className="text-red-600">*</span>
                 </Label>
-                {getErrorForField('permissions') && (
-                  <p className="text-sm text-red-600">{getErrorForField('permissions')}</p>
+                <Input
+                  id="description"
+                  placeholder="Enter role description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  className="w-full mt-1"
+                />
+                {getErrorForField('description') && (
+                  <p className="mt-1 text-sm text-red-600">{getErrorForField('description')}</p>
                 )}
-                {Object.entries(groupPermissionsByModule(permissions)).map(([moduleName, perms]) => {
-                  const permsArray = perms as any[];
-                  const allSelected = permsArray.every(p => selectedPermissions.includes(p._id));
-
-                  const toggleAllInModule = () => {
-                    if (allSelected) {
-                      setSelectedPermissions(prev =>
-                        prev.filter(id => !permsArray.some(p => p._id === id))
-                      );
-                    } else {
-                      const newIds = permsArray
-                        .map(p => p._id)
-                        .filter(id => !selectedPermissions.includes(id));
-                      setSelectedPermissions(prev => [...prev, ...newIds]);
-                    }
-                  };
-
-                  return (
-                    <div key={moduleName} className="border p-4 rounded bg-muted/20 shadow-sm">
-                      <div className="flex justify-between items-center mb-3">
-                        <Label className="font-medium">{moduleName} Permissions</Label>
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            checked={allSelected}
-                            onCheckedChange={toggleAllInModule}
-                          />
-                          <span className="text-sm">{allSelected ? 'Unselect All' : 'Select All'}</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        {permsArray.map((perm) => (
-                          <label key={perm._id} className="flex items-center space-x-2">
-                            <Switch
-                              checked={selectedPermissions.includes(perm._id)}
-                              onCheckedChange={() => handlePermissionToggle(perm._id)}
-                            />
-                            <span className="text-sm">{perm.name}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
 
-              {/* Buttons */}
-              <div className="flex justify-end space-x-3 pt-6">
-                <Button variant="outline" type="button" onClick={() => navigate(-1)}>
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  Save
-                </Button>
+              {/* Status */}
+              <div className="flex items-center space-x-2 pt-6 md:pt-0"> {/* Adjust padding for alignment */}
+                <Label htmlFor="status" className="text-sm font-medium">
+                  Status
+                </Label>
+                <Switch
+                  id="status"
+                  checked={formData.status}
+                  onCheckedChange={handleStatusToggle}
+                />
+                <span className="text-sm">{formData.status ? 'Active' : 'Inactive'}</span>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
-    </>
+          </CardContent>
+        </Card>
+
+        {/* Permissions Section */}
+        <Card className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-xl border-border/50 shadow-xl">
+          <CardHeader>
+            <CardTitle>Permissions</CardTitle>
+            <CardDescription>Select the permissions for this role.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {getErrorForField('permissions') && (
+              <p className="text-sm text-red-600 mb-4">{getErrorForField('permissions')}</p>
+            )}
+            <div className="space-y-6">
+              {Object.entries(groupedPermissions).map(([moduleName, perms]) => {
+                const permsArray = perms as any[];
+                const allSelected = permsArray.every(p => selectedPermissions.includes(p._id));
+
+                const toggleAllInModule = () => {
+                  if (allSelected) {
+                    setSelectedPermissions(prev =>
+                      prev.filter(id => !permsArray.some(p => p._id === id))
+                    );
+                  } else {
+                    const newIds = permsArray
+                      .map(p => p._id)
+                      .filter(id => !selectedPermissions.includes(id));
+                    setSelectedPermissions(prev => [...prev, ...newIds]);
+                  }
+                };
+
+                return (
+                  <div key={moduleName} className="border p-4 rounded-lg bg-background/50 shadow-inner">
+                    <div className="flex justify-between items-center mb-3 pb-2 border-b border-border/50">
+                      <h3 className="font-semibold text-lg">{moduleName} Permissions</h3>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={allSelected}
+                          onCheckedChange={toggleAllInModule}
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {allSelected ? 'Unselect All' : 'Select All'}
+                        </span>
+                      </div>
+                    </div>
+                    {/* The `grid` layout will naturally expand as needed.
+                        If you have many permissions and want a scrollbar specifically within this section,
+                        you could add `max-h-96 overflow-y-auto` (adjust max-h as needed) here:
+                    */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+                      {permsArray.map((perm) => (
+                        <label key={perm._id} className="flex items-center space-x-2 cursor-pointer py-1">
+                          <Switch
+                            checked={selectedPermissions.includes(perm._id)}
+                            onCheckedChange={() => handlePermissionToggle(perm._id)}
+                          />
+                          <span className="text-sm font-medium text-foreground">{perm.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-3 pt-6">
+          <Button variant="outline" type="button" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            Save
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 
