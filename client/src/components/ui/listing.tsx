@@ -48,15 +48,15 @@ const Listing = <T,>({
             {/* Main card container for the data table, consistent with dashboard styling */}
             <Card className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-xl border-border/50 shadow-xl rounded-xl">
                 {/* Header for the data table card, providing a title and description for the table itself */}
-                <CardHeader className="bg-card/70 backdrop-blur-md border-b border-border/50 p-6 rounded-t-xl">
+                {/* <CardHeader className="bg-card/70 backdrop-blur-md border-b border-border/50 p-6 rounded-t-xl">
                     <CardTitle className="flex items-center gap-2 text-primary font-bold">
-                        <Filter className="h-5 w-5" /> {/* Icon for the table title */}
+                        <Filter className="h-5 w-5" />
                         {tableTitle}
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
                         {tableDescription}
                     </CardDescription>
-                </CardHeader>
+                </CardHeader> */}
 
                 {/* Content area for the actual DataTable component */}
                 <CardContent className="p-6">

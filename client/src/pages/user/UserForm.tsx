@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast"; // Custom toast hook
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Assuming you have these UI components
-import { Separator } from "@/components/ui/separator"; // Assuming you have a Separator component
 
 // Function to generate a random secure password
 const generatePassword = (length: number = 20): string => {
@@ -51,17 +50,17 @@ const UserForm = () => {
     email: "",
     phone: "",
     password: "",
-    status: true, // Default to active
+    status: "active", // Default to active
     extra_user_limit: "",
     expired_at: "",
     role_id: "684853e02cb7f3a21285bf06", // Consider making this dynamic or a dropdown
     company_profile: {
       name: "",
       email: "",
-      logo: null as File | null, // Add file states for uploads
-      favicon: null as File | null,
     },
-    profile_pic: null as File | null,
+    logo: null,
+    favicon: null,
+    profile_pic: null,
   });
 
   // Generate password for new users
@@ -128,7 +127,7 @@ const UserForm = () => {
         //       },
         //       profile_pic: null, // Files generally aren't pre-filled
         //     });
-        //     setSubscribedServices(userData.subscribed_services || []);
+        //     setSubscribedServices(userData.subscribe_services || []);
         //   } else {
         //     toast({
         //       title: "Error fetching user data",
@@ -147,14 +146,13 @@ const UserForm = () => {
         // }
 
         // For demonstration, simulating fetching user data:
-        console.log(`Fetching user data for ID: ${id}`);
         setFormData((prev) => ({
           ...prev,
           first_name: "John",
           last_name: "Doe",
           email: "john.doe@example.com",
           phone: "1234567890",
-          status: true,
+          status: "active",
           extra_user_limit: "5",
           expired_at: "2025-12-31",
           company_profile: {
@@ -195,22 +193,6 @@ const UserForm = () => {
     }));
   };
 
-  const handleFileSelect = (file: File, field: "profile_pic" | "logo" | "favicon") => {
-    if (field === "profile_pic") {
-      setFormData((prev) => ({ ...prev, profile_pic: file }));
-    } else if (field === "logo") {
-      setFormData((prev) => ({
-        ...prev,
-        company_profile: { ...prev.company_profile, logo: file },
-      }));
-    } else if (field === "favicon") {
-      setFormData((prev) => ({
-        ...prev,
-        company_profile: { ...prev.company_profile, favicon: file },
-      }));
-    }
-  };
-
   const handleServiceToggle = (id: string, name: string) => {
     setSubscribedServices((prev) => {
       if (prev.some((s) => s.service_id === id)) {
@@ -241,6 +223,12 @@ const UserForm = () => {
     return specificError;
   };
 
+  const handleImageChange = (file, name) => {
+    if (file) {
+      setFormData((prev) => ({ ...prev, [name]: file }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -249,19 +237,14 @@ const UserForm = () => {
     if (!formData.first_name.trim()) newErrors.push("First Name is required.");
     if (!formData.last_name.trim()) newErrors.push("Last Name is required.");
     if (!formData.email.trim()) newErrors.push("Email is required.");
-    // Password is only required for new users
     if (!isEdit && !formData.password.trim()) newErrors.push("Password is required for new users.");
     if (!formData.company_profile.name.trim()) newErrors.push("Company Name is required.");
     if (!formData.expired_at.trim()) newErrors.push("Expired At date is required.");
-
-    // Validate file uploads only for new users or if the file is explicitly marked as required in edit mode
-    // (Assuming FileUpload handles showing current files, and user can re-upload if needed)
     if (!isEdit) {
       if (!formData.profile_pic) newErrors.push("Profile Picture is required.");
-      if (!formData.company_profile.logo) newErrors.push("Company Logo is required.");
-      if (!formData.company_profile.favicon) newErrors.push("Company Icon is required.");
+      if (!formData.logo) newErrors.push("Company Logo is required.");
+      if (!formData.favicon) newErrors.push("Company Icon is required.");
     }
-
 
     if (newErrors.length > 0) {
       setErrors(newErrors);
@@ -278,44 +261,17 @@ const UserForm = () => {
       });
       return;
     }
-    setErrors([]); // Clear errors if validation passes
+    setErrors([]);
 
-    // In a real application, you would construct FormData here to send files.
-    // For this example, we'll use placeholder URLs.
     const dataToSend = {
       ...formData,
-      subscribed_services: subscribedServices, // Include subscribed services
-      // Replace file objects with placeholder URLs or actual upload logic
-      profile_pic: formData.profile_pic ? "uploaded_profile_pic_url" : null, // This would be the actual URL after upload
+      subscribe_services: subscribedServices,
       company_profile: {
         ...formData.company_profile,
-        logo: formData.company_profile.logo ? "uploaded_logo_url" : null, // This would be the actual URL after upload
-        favicon: formData.company_profile.favicon ? "uploaded_favicon_url" : null, // This would be the actual URL after upload
       },
     };
 
     try {
-      // You would typically use FormData for actual file uploads to your API.
-      // Example of how you'd build FormData:
-      /*
-      const apiFormData = new FormData();
-      apiFormData.append("first_name", formData.first_name);
-      apiFormData.append("last_name", formData.last_name);
-      apiFormData.append("email", formData.email);
-      apiFormData.append("phone", formData.phone);
-      if (!isEdit) apiFormData.append("password", formData.password); // Only send password for new user
-      apiFormData.append("status", String(formData.status));
-      apiFormData.append("extra_user_limit", formData.extra_user_limit);
-      apiFormData.append("expired_at", formData.expired_at);
-      apiFormData.append("role_id", formData.role_id);
-      apiFormData.append("company_profile[name]", formData.company_profile.name);
-      apiFormData.append("company_profile[email]", formData.company_profile.email);
-      if (formData.profile_pic) apiFormData.append("profile_pic", formData.profile_pic);
-      if (formData.company_profile.logo) apiFormData.append("company_profile_logo", formData.company_profile.logo); // API might expect different field names
-      if (formData.company_profile.favicon) apiFormData.append("company_profile_favicon", formData.company_profile.favicon);
-      apiFormData.append("subscribed_services", JSON.stringify(subscribedServices)); // Stringify complex objects
-      */
-
       const action = isEdit ? updateUser(id!, dataToSend) : createUser(dataToSend); // Use dataToSend, not formData for the mock API call
       await action;
       toast({
@@ -349,8 +305,6 @@ const UserForm = () => {
 
 
   return (
-    // Removed any potential fixed height classes here (e.g., h-full, h-screen)
-    // The `space-y-6` provides vertical spacing between elements.
     <div className="space-y-6 animate-fade-in">
       <PageHeader
         title={isEdit ? "Edit User" : "Create User"}
@@ -456,7 +410,7 @@ const UserForm = () => {
                 </Label>
                 <Switch
                   id="status"
-                  checked={formData.status}
+                  checked={formData.status == "active" ? true : false}
                   onCheckedChange={(checked) => handleInputChange("status", checked)}
                 />
                 <span className="text-sm">
@@ -495,6 +449,23 @@ const UserForm = () => {
                   <p className="mt-1 text-sm text-red-600">{getErrorForField('expired_at')}</p>
                 )}
               </div>
+
+              {/* Profile Picture */}
+              <div>
+                <Label htmlFor="profile_pic" className="text-sm font-medium">
+                  Profile Picture {isEdit ? '' : <span className="text-red-600">*</span>}
+                </Label>
+                <FileUpload
+                  className="mt-1"
+                  onFileSelect={(file) => handleImageChange(file, "profile_pic")}
+                  accept="image/*"
+                  maxSize={5 * 1024 * 1024} // 5 MB
+                />
+                {formData.profile_pic && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.profile_pic.name}</p>}
+                {getErrorForField('profile picture') && (
+                  <p className="mt-1 text-sm text-red-600">{getErrorForField('profile picture')}</p>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -505,7 +476,7 @@ const UserForm = () => {
             <CardTitle>Company Profile</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
               {/* Company Name */}
               <div>
                 <Label htmlFor="company_name" className="text-sm font-medium">
@@ -538,23 +509,6 @@ const UserForm = () => {
                 />
               </div>
 
-              {/* Profile Picture */}
-              <div>
-                <Label htmlFor="profile_pic" className="text-sm font-medium">
-                  Profile Picture {isEdit ? '' : <span className="text-red-600">*</span>}
-                </Label>
-                <FileUpload
-                  className="mt-1"
-                  onFileSelect={(file) => handleFileSelect(file, "profile_pic")}
-                  accept="image/*"
-                  maxSize={5 * 1024 * 1024} // 5 MB
-                />
-                {formData.profile_pic && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.profile_pic.name}</p>}
-                {getErrorForField('profile picture') && (
-                  <p className="mt-1 text-sm text-red-600">{getErrorForField('profile picture')}</p>
-                )}
-              </div>
-
               {/* Company Logo */}
               <div>
                 <Label htmlFor="logo" className="text-sm font-medium">
@@ -562,11 +516,11 @@ const UserForm = () => {
                 </Label>
                 <FileUpload
                   className="mt-1"
-                  onFileSelect={(file) => handleFileSelect(file, "logo")}
+                  onFileSelect={(file) => handleImageChange(file, "logo")}
                   accept="image/*"
                   maxSize={5 * 1024 * 1024} // 5 MB
                 />
-                {formData.company_profile.logo && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.company_profile.logo.name}</p>}
+                {formData.logo && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.logo.name}</p>}
                 {getErrorForField('company logo') && (
                   <p className="mt-1 text-sm text-red-600">{getErrorForField('company logo')}</p>
                 )}
@@ -579,11 +533,11 @@ const UserForm = () => {
                 </Label>
                 <FileUpload
                   className="mt-1"
-                  onFileSelect={(file) => handleFileSelect(file, "favicon")}
+                  onFileSelect={(file) => handleImageChange(file, "favicon")}
                   accept="image/*"
                   maxSize={5 * 1024 * 1024} // 5 MB
                 />
-                {formData.company_profile.favicon && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.company_profile.favicon.name}</p>}
+                {formData.favicon && <p className="text-xs text-muted-foreground mt-1">Selected: {formData.favicon.name}</p>}
                 {getErrorForField('company icon') && (
                   <p className="mt-1 text-sm text-red-600">{getErrorForField('company icon')}</p>
                 )}
