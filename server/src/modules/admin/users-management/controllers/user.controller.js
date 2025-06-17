@@ -26,7 +26,8 @@ class UserController {
         expired_at,
         extra_user_limit,
       } = req.body;
-
+      console.log(req.files);
+      return;
       // Prepare data for validation
       const data = {
         first_name,
@@ -41,9 +42,7 @@ class UserController {
         favicon: files.favicon?.[0].filename,
         company_profile_name,
         company_profile_email,
-        subscribe_services: subscribe_services
-          ? JSON.parse(subscribe_services)
-          : [],
+        subscribe_services: subscribe_services,
         expired_at,
         extra_user_limit,
       };

@@ -15,7 +15,7 @@ const baseSchema = {
   logo: Joi.any().optional(),
   favicon: Joi.any().optional(),
   company_profile: Joi.object().optional(),
-  subscribe_services: Joi.string().allow(null, "").optional(),
+  subscribe_services: Joi.array().allow(null, {}).optional(),
   expired_at: Joi.date().iso(),
   extra_user_limit: Joi.number().integer().min(0),
 };
