@@ -26,8 +26,9 @@ class UserController {
         expired_at,
         extra_user_limit,
       } = req.body;
-      console.log(req.files);
-      return;
+
+      const files = req.files;
+      
       // Prepare data for validation
       const data = {
         first_name,
