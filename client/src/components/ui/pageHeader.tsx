@@ -12,6 +12,7 @@ interface PageHeaderProps {
   addButtonText?: string;
   className?: string;
   permission?: string;
+  extraCondition?: boolean;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -20,7 +21,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   addButtonLink,
   addButtonText = "Add Role", // Default text for the button
   className = "",
-  permission, // Permission string for access control
+  permission,
+  extraCondition,
 }) => {
   return (
     // Outer container with enhanced styling for a more premium look
@@ -58,7 +60,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       </div>
 
       {/* Conditional rendering for the Add Button with access control */}
-      {addButtonLink && (
+      {addButtonLink && extraCondition && (
         <CanAccess permission={permission}>
           <Link to={addButtonLink} className="relative z-10"> {/* Ensure button is above background effects */}
             <Button

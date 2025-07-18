@@ -11,7 +11,6 @@ class UserController {
   // Create a new user
   async create(req, res) {
     try {
-      // Extract FormData fields
       const {
         first_name,
         last_name,
@@ -20,50 +19,12 @@ class UserController {
         password,
         status,
         role_id,
-        company_profile_name,
-        company_profile_email,
+        company_profile,
         subscribe_services,
         expired_at,
         extra_user_limit,
       } = req.body;
 
-      const files = req.files;
-      
-      // Prepare data for validation
-      const data = {
-        first_name,
-        last_name,
-        email,
-        phone,
-        password,
-        status,
-        role_id,
-        profile_pic: files.profile_pic?.[0].filename,
-        logo: files.logo?.[0].filename,
-        favicon: files.favicon?.[0].filename,
-        company_profile_name,
-        company_profile_email,
-        subscribe_services: subscribe_services,
-        expired_at,
-        extra_user_limit,
-      };
-
-      // Validate with Joi
-      const { error } = createUserSchema.validate(data, { abortEarly: false });
-      if (error) {
-        const errors = error.details.reduce((acc, err) => {
-          acc[err.path.join(".")] = err.message;
-          return acc;
-        }, {});
-        return sendResponse(res, {
-          statusCode: StatusCodes.BAD_REQUEST,
-          success: false,
-          message: "Validation failed",
-          errors,
-        });
-      }
-
-      // Transform validated data for UserService
       const userData = {
         first_name,
         last_name,
@@ -72,16 +33,10 @@ class UserController {
         password,
         status,
         role_id: role_id || null,
-        profile_pic: data.profile_pic || null,
-        logo: data.logo || null,
-        favicon: data.favicon || null,
-        company_profile: {
-          name: company_profile_name || "",
-          email: company_profile_email || "",
-        },
-        subscribe_services: data.subscribe_services || [],
+        company_profile: company_profile,
+        subscribe_services: subscribe_services || [],
         expired_at,
-        extra_user_limit: data.extra_user_limit ?? null,
+        extra_user_limit: extra_user_limit ?? null,
         parent_id: req.user?._id || null,
         created_by: req.user?._id || null,
         updated_by: null,
@@ -114,76 +69,29 @@ class UserController {
         last_name,
         email,
         phone,
-        password,
         status,
         role_id,
-        company_profile_name,
-        company_profile_email,
+        company_profile,
         subscribe_services,
         expired_at,
         extra_user_limit,
       } = req.body;
 
-      // Access uploaded files
-      const files = req.files || {};
-
-      // Prepare data for validation
-      const data = {
-        first_name,
-        last_name,
-        email,
-        phone,
-        password,
-        status,
-        role_id,
-        profile_pic: files.profile_pic?.[0]?.path,
-        logo: files.logo?.[0]?.path,
-        favicon: files.favicon?.[0]?.path,
-        company_profile_name,
-        company_profile_email,
-        subscribe_services: subscribe_services
-          ? JSON.parse(subscribe_services)
-          : [],
-        expired_at,
-        extra_user_limit,
-      };
-
-      // Validate with Joi
-      const { error } = updateUserSchema.validate(data, { abortEarly: false });
-      if (error) {
-        const errors = error.details.reduce((acc, err) => {
-          acc[err.path.join(".")] = err.message;
-          return acc;
-        }, {});
-        return sendResponse(res, {
-          statusCode: StatusCodes.BAD_REQUEST,
-          success: false,
-          message: "Validation failed",
-          errors,
-        });
-      }
-
-      // Transform validated data for UserService
       const userData = {
         first_name,
         last_name,
         email,
         phone,
-        password,
         status,
         role_id: role_id || null,
-        profile_pic: data.profile_pic || null,
-        logo: data.logo || null,
-        favicon: data.favicon || null,
-        company_profile: {
-          name: company_profile_name || "",
-          email: company_profile_email || "",
-        },
-        subscribe_services: data.subscribe_services || [],
+        company_profile: company_profile,
+        subscribe_services: subscribe_services || [],
         expired_at,
-        extra_user_limit: data.extra_user_limit ?? null,
+        extra_user_limit: extra_user_limit ?? null,
         updated_by: req.user?._id || null,
       };
+
+      console.log(userData);
 
       const updatedUser = await UserService.updateUser(id, userData);
 
@@ -209,7 +117,6 @@ class UserController {
       });
     }
   }
-
   // Get all users
   async getUsers(req, res) {
     try {

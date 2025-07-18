@@ -16,6 +16,7 @@ interface ListingProps<T> {
     addButtonLink?: string;
     className?: string;
     permission?: string;
+    extraCondition?: boolean;
     tableTitle?: string;
     tableDescription?: string;
 }
@@ -31,6 +32,7 @@ const Listing = <T,>({
     addButtonLink,
     className,
     permission,
+    extraCondition,
     tableTitle = 'Enhanced Data Table',
     tableDescription = 'Advanced data table with sorting, filtering, pagination and column visibility controls.',
 }: ListingProps<T>) => {
@@ -43,6 +45,7 @@ const Listing = <T,>({
                 addButtonLink={addButtonLink}
                 addButtonText={addButtonText}
                 permission={permission}
+                extraCondition={extraCondition}
             />
 
             {/* Main card container for the data table, consistent with dashboard styling */}

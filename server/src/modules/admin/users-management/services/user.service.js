@@ -31,9 +31,11 @@ const UserService = {
 
   async getUserById(query, userId) {
     try {
-      return await UserModel.findOne({ _id: userId, ...query }).select(
-        "-password -tokens -created_by -updated_by"
-      );
+      return await UserModel.findOne({ _id: userId, ...query })
+        .select("-password -tokens -created_by -updated_by")
+        .populate({
+          path: "role_id",
+        });
     } catch (error) {
       console.error("Error fetching user by ID: ", error);
       throw new Error("Error fetching user by ID: " + error.message);

@@ -16,14 +16,20 @@ export const createUser = async (userData) => {
   } catch (error) {
     throw error.response?.data || { message: "Failed to create user" };
   }
-}
+};
 
-export const updateUser = async (userData) => {
+export const updateUser = async (id, userData) => {
   try {
-    const response = await axiosInstance.put("/user/profile", userData);
+    const response = await axiosInstance.put(`/admin/user/${id}`, userData);
     return response.data;
   } catch (error) {
-    throw error.response?.data || { message: "Failed to update user profile" };
+    console.error("Error updating user:", error);
+
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to update user profile due to an unexpected error.";
+    throw { message: errorMessage, originalError: error };
   }
 };
 
@@ -38,7 +44,7 @@ export const getUsers = async (params = {}) => {
 
 export const getUserById = async (userId) => {
   try {
-    const response = await axiosInstance.get(`/user/${userId}`);
+    const response = await axiosInstance.get(`admin/user/${userId}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Failed to fetch user" };

@@ -4,6 +4,7 @@
     "slug": "kyc",
     "prefix": "Idm",
     "status": 1,
+    "description": "Verifies a user's identity using official documents.",
     "tokens": {
       "production": {
         "url": "https://gw.idmerit.com/us-15/2.1?",
@@ -27109,6 +27110,7 @@
     "slug": "verify",
     "prefix": "Idm",
     "status": 1,
+    "description": "Confirms a user's age for age-restricted services.",
     "tokens": {
       "sandbox": {
         "url": "https://kyc-dev.idmerit.com/v2.9/verify?",
@@ -27125,6 +27127,7 @@
     "slug": "aml",
     "prefix": "Idm",
     "status": 1,
+    "description": "Screens users against global sanctions and watchlists.",
     "tokens": {
       "sandbox": {
         "url": "https://amldev2.idmerit.com/v1.4/",
@@ -27141,6 +27144,7 @@
     "slug": "kyb",
     "prefix": "Idm",
     "status": 1,
+    "description": "Validates a business and its ownership structure.",
     "tokens": {
       "sandbox": {
         "url": "https://kybdev.idmerit.com/v1.4/",
@@ -28559,6 +28563,7 @@
     "slug": "social",
     "prefix": "Idm",
     "status": 1,
+    "description": "Checks user identity via social media presence.",
     "tokens": {
       "sandbox": {
         "url": "https://idsocial-dev.idmerit.com/v2.1/service",
@@ -28575,6 +28580,7 @@
     "slug": "trust",
     "prefix": "Idm",
     "status": 1,
+    "description": "Assesses a user’s overall risk and trust score.",
     "tokens": {
       "sandbox": {
         "url": "https://itrust-dev.idmerit.com/v2.1/service",
@@ -28587,6 +28593,7 @@
     "slug": "scan",
     "prefix": "Idm",
     "status": 1,
+    "description": "Extracts and verifies data from ID documents.",
     "tokens": {
       "sandbox": {
         "url": "https://sandbox.idmvalidate.com/",
@@ -28603,6 +28610,7 @@
     "slug": "live",
     "prefix": "Idm",
     "status": 1,
+    "description": "Ensures the user is real with liveness detection.",
     "tokens": {
       "sandbox": {
         "url": "https://sandbox.idmvalidate.com/",
@@ -28618,19 +28626,15 @@
     "name": "Device",
     "slug": "device",
     "prefix": "Idm",
-    "status": 1
-  },
-  {
-    "name": "B2cPrefill",
-    "slug": "b2cprefill",
-    "prefix": "Idm",
-    "status": 1
+    "status": 1,
+    "description": "Analyzes the device for fraud or risk signals."
   },
   {
     "name": "Prefill",
     "slug": "prefill",
     "prefix": "Idm",
     "status": 1,
+    "description": "Pre-populates form fields to simplify user input and speed up onboarding.",
     "tokens": {
       "sandbox": {
         "url": "https://prefill-dev.idmerit.com/v1.0/",

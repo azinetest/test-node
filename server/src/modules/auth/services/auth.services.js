@@ -56,6 +56,10 @@ const LoginService = {
       { $unset: { tokens: 1 } }
     );
   },
+
+  async getSubUserCount(user_id) {
+    return await UserModel.countDocuments({ parent_id: user_id });
+  },
 };
 
 module.exports = LoginService;

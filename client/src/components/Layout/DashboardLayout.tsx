@@ -34,6 +34,13 @@ const DashboardLayout = () => {
       gradient: 'from-' + primaryColor + '-600 to-cyan-500',
     },
     {
+      title: 'Services',
+      icon: ShieldCheck,
+      href: '/services',
+      isActive: location.pathname.startsWith('/services'),
+      gradient: 'from-' + primaryColor + '-600 to-cyan-500',
+    },
+    {
       title: 'Roles',
       icon: ShieldCheck,
       href: '/roles',

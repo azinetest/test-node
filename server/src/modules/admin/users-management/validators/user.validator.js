@@ -5,8 +5,9 @@ const baseSchema = {
   last_name: Joi.string().min(2).max(50),
   email: Joi.string().email().max(100),
   phone: Joi.string().pattern(/^[0-9]{10,15}$/),
-  password: Joi.string().min(6).max(128),
-  status: Joi.string().valid("active", "inactive", "blocked", "other").default("active"),
+  password: Joi.string().min(6).max(128).allow(null,""),
+  status: Joi.boolean().default(true),
+  environment: Joi.string().allow(null, "").default('sandbox'),
   company_profile_name: Joi.string().min(2).max(100).allow(null, "").optional(),
   company_profile_email: Joi.string().email().max(100).allow(null, "").optional(),
 

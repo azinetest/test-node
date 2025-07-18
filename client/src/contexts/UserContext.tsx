@@ -37,6 +37,7 @@ export interface AuthUser {
   subscribe_services: string[];
   expired_at: string;
   extra_user_limit: number;
+  sub_user_count: number;
   created_by: string | null;
   updated_by: string | null;
   createdAt: string;

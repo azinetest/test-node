@@ -1,7 +1,7 @@
 const slugify = require("slugify");
 const Services = require("../services/service.service");
 const { StatusCodes } = require("http-status-codes");
-const sendResponse = require("../../../../utils/response"); // Adjust path as necessary
+const sendResponse = require("../../../../utils/response");
 
 class ServiceController {
   // Create a new service

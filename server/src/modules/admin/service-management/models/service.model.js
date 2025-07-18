@@ -42,6 +42,11 @@ const ServiceSchema = new mongoose.Schema(
       default: 1,
       comment: "0 - Inactive, 1 - Active",
     },
+    description: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     tokens: {
       sandbox: {
         type: TokenSchema,

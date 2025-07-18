@@ -23,6 +23,7 @@ import TabsDemo from "@/pages/TabsDemo";
 import UserList from "@/pages/user/UserList";
 import UserForm from "@/pages/user/UserForm";
 import UserView from "@/pages/user/UserView";
+import ServiceList from "./pages/Service/ServiceList";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,10 @@ const App = () => (
                   />
                 </Route>
 
+                {/* Services routes */}
+                <Route path="services">
+                  <Route index element={<ServiceList />} />
+                </Route>
               </Route>
 
               {/* Fallback */}

@@ -98,7 +98,7 @@ class LoginController {
         });
       }
       await AuthService.deleteToken(userDetails.id);
-      
+
       return sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: false,
@@ -129,7 +129,6 @@ class LoginController {
       }
 
       const userDetails = await AuthService.getTokenUserDetails(token);
-
       if (!userDetails) {
         return sendResponse(res, {
           statusCode: StatusCodes.UNAUTHORIZED,
@@ -140,7 +139,8 @@ class LoginController {
       }
 
       const userData = pickUserFields(userDetails);
-
+      const subUserCount = await AuthService.getSubUserCount(userDetails._id);
+      userData["sub_user_count"] = subUserCount;
       return sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,

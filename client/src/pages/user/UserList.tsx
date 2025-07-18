@@ -21,45 +21,58 @@ import { PERMISSIONS } from "@/constants/permissions";
 interface CompanyProfile {
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
 }
 
 interface Role {
   _id: string;
   name: string;
   slug: string;
+  description: string;
+  editable: string;
   permissions: string[];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface SubscribeService {
+  service_id: string;
+  service_name: string;
+  environment: string;
+  request_limit: number;
+  price: number;
 }
 
 interface User {
-  _id: number;
+  _id: string; // Changed from number to string to match API
   first_name: string;
   last_name: string;
   email: string;
   phone: string;
-  status: number; // Assuming 1 = Active, 0 = Inactive, 2 = Block
-  role_id: Role;
+  username: string;
+  status: number;
+  role_id: Role | null;
   parent_id: string | null;
   profile_pic: string;
-  logo: string;
-  favicon: string;
   company_profile: CompanyProfile;
-  subscribe_services: string[];
+  subscribe_services: SubscribeService[];
   expired_at: string;
   extra_user_limit: number;
-  created_by: string | null;
-  updated_by: string | null;
   createdAt: string;
   updatedAt: string;
-  username: string;
 }
 
 const UserList = () => {
   const { user } = useUser();
   const { toast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
+  const [createExtraUser, setExtraUser] = useState(true);
 
   useEffect(() => {
+    if (user.role_id.slug != "super-admin" && user.extra_user_limit == 0 && user.sub_user_count <= user.extra_user_limit) {
+      setExtraUser(false);
+    }
     const fetchData = async () => {
       const response = await getUsers();
       if (response.statusCode !== 200) {
@@ -73,7 +86,7 @@ const UserList = () => {
       setUsers(response.data);
     };
     fetchData();
-  }, [toast]); // Added toast to dependency array
+  }, [toast]);
 
   const getStatusColor = (
     status: number
@@ -172,8 +185,15 @@ const UserList = () => {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.role_id.name}</div>
+        <div className="text-muted-foreground">
+          {row.original.role_id ? row.original.role_id.name : "No Role"}
+        </div>
       ),
+      sortingFn: (rowA, rowB) => {
+        const roleA = rowA.original.role_id?.name ?? "No Role";
+        const roleB = rowB.original.role_id?.name ?? "No Role";
+        return roleA.localeCompare(roleB);
+      },
     },
     {
       accessorKey: "status",
@@ -237,8 +257,8 @@ const UserList = () => {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const isEditable = row.original.role_id.slug !== "super-admin";
-        const isSuperAdminUser = user.role_id.slug === "super-admin";
+        const isEditable = row.original.role_id?.slug !== "super-admin"; // Check for null role_id
+        const isSuperAdminUser = user.role_id?.slug === "super-admin"; // Check for null user.role_id
         const canEdit = isEditable || (isSuperAdminUser && !isEditable);
 
         return (
@@ -287,7 +307,7 @@ const UserList = () => {
       addButtonText="Add User"
       addButtonLink="/users/create"
       permission={PERMISSIONS.USER.CREATE}
-      data-lov-id="users-table"
+      extraCondition={createExtraUser}
     />
   );
 };

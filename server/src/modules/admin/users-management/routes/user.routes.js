@@ -12,15 +12,7 @@ const uploadMiddleware = require("../middlewares/multer.middleware");
 // Create a new user with image upload
 router.post(
   "/",
-  [
-    authorize("create-user"),
-    validate(createUserSchema),
-    uploadMiddleware([
-      { name: "profile_pic", maxCount: 1 },
-      { name: "logo", maxCount: 1 },
-      { name: "favicon", maxCount: 1 },
-    ]),
-  ],
+  [authorize("create-user"), validate(createUserSchema)],
   userController.create
 );
 
