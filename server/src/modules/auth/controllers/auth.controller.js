@@ -101,7 +101,7 @@ class LoginController {
 
       return sendResponse(res, {
         statusCode: StatusCodes.OK,
-        success: false,
+        success: true,
         message: "Logout Successfully.",
         data: null,
       });
