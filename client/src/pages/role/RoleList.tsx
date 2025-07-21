@@ -11,6 +11,10 @@ import { Link } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext'; // Assuming UserProvider is not directly used here
 import { CanAccess } from "@/guards/AccessControl";
 import { PERMISSIONS } from '@/constants/permissions';
+import Loading from '@/components/common/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '@/store/features/userSlice';
+import { RootState } from '@/store';
 
 interface Role {
     _id: number;
@@ -26,9 +30,12 @@ const RoleManagement = () => {
     const { user } = useUser();
     const { toast } = useToast();
     const [roles, setRoles] = useState([]);
+    const dispatch = useDispatch();
+    const { loading } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         const fetchData = async () => {
+            dispatch(setLoading(true));
             try { // Added try-catch for API call
                 const roleResponse = await getRoles();
                 if (roleResponse.statusCode !== 200) {
@@ -46,10 +53,12 @@ const RoleManagement = () => {
                     description: error.message || "Unable to load roles from the server.",
                     variant: "destructive",
                 });
+            } finally {
+                dispatch(setLoading(false));
             }
         };
         fetchData();
-    }, [toast]); // Added toast to dependency array
+    }, [toast, dispatch]); // Added toast to dependency array
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -173,6 +182,10 @@ const RoleManagement = () => {
             },
         }
     ];
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <Listing

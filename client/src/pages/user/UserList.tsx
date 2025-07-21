@@ -16,6 +16,10 @@ import { Link } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
 import { CanAccess } from "@/guards/AccessControl";
 import { PERMISSIONS } from "@/constants/permissions";
+import Loading from "@/components/common/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/store/features/userSlice";
+import { RootState } from "@/store";
 
 // Types based on API response
 interface CompanyProfile {
@@ -68,12 +72,15 @@ const UserList = () => {
   const { toast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [createExtraUser, setExtraUser] = useState(true);
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (user.role_id.slug != "super-admin" && user.extra_user_limit == 0 && user.sub_user_count <= user.extra_user_limit) {
       setExtraUser(false);
     }
     const fetchData = async () => {
+      dispatch(setLoading(true));
       const response = await getUsers();
       if (response.statusCode !== 200) {
         toast({
@@ -81,12 +88,14 @@ const UserList = () => {
           description: "Unable to load users from the server.",
           variant: "destructive",
         });
+        dispatch(setLoading(false));
         return;
       }
       setUsers(response.data);
+      dispatch(setLoading(false));
     };
     fetchData();
-  }, [toast]);
+  }, [toast, dispatch, user]);
 
   const getStatusColor = (
     status: number
@@ -295,6 +304,10 @@ const UserList = () => {
       },
     },
   ];
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Listing

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button";
+import Loading from "@/components/common/Loading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
@@ -9,9 +10,12 @@ import { login } from "@/api/auth";
 import { useTheme } from "@/contexts/ThemeContext";
 import idmeritLogo from "@/assets/company/idmerit-logo.svg";
 import { useUser } from "@/contexts/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/store/features/userSlice";
+import { RootState } from "@/store";
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useUser(); // updated destructure
   const [formData, setFormData] = useState({
     username: "",
@@ -20,10 +24,12 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { theme, primaryColor } = useTheme();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(setLoading(true));
 
     if (!formData.username || !formData.password) {
       toast({
@@ -31,7 +37,7 @@ const Login = () => {
         description: "Username and password are required.",
         variant: "destructive",
       });
-      setIsLoading(false);
+      dispatch(setLoading(false));
       return;
     }
 
@@ -63,7 +69,7 @@ const Login = () => {
         });
       }
     } finally {
-      setIsLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -99,6 +105,10 @@ const Login = () => {
     };
     return gradientMap[primaryColor] || "from-blue-600 to-cyan-500";
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div
@@ -200,9 +210,9 @@ const Login = () => {
               <Button
                 type="submit"
                 className={`w-full bg-gradient-to-r ${getGradientClass()} hover:opacity-90 text-primary-foreground py-2 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
-                disabled={isLoading}
+                disabled={loading}
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {loading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
           </div>
