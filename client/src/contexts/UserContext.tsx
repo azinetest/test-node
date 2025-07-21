@@ -8,6 +8,9 @@ import React, {
   ReactNode,
 } from "react";
 import { getMe } from "@/api/auth";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store';
+import { setUser as setUserAction, clearUser } from '@/store/features/userSlice';
 
 // Types based on API response
 interface CompanyProfile {
@@ -59,7 +62,8 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user.user);
   const [loading, setLoading] = useState(true);
   const hasFetchedRef = useRef(false);
 
@@ -69,9 +73,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
     try {
       const response = await getMe();
-      setUser(response.data);
+      dispatch(setUserAction(response.data));
     } catch (error) {
-      setUser(null);
+      dispatch(clearUser());
     } finally {
       setLoading(false);
     }
@@ -83,7 +87,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, refetchUser: fetchMe }}
+      value={{ user, setUser: (user) => dispatch(setUserAction(user)), loading, refetchUser: fetchMe }}
     >
       {children}
     </UserContext.Provider>
